@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LayoutDashboard, Package, ShoppingCart, Users, Plus, Pencil, Trash2, X, Search, TrendingUp, Euro, AlertTriangle, RotateCcw, Info } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, Users, Plus, Pencil, Trash2, X, Search, TrendingUp, Euro, AlertTriangle, RotateCcw, Info, Upload, ImageOff } from "lucide-react";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import ProductArt from "../components/ProductArt";
 import { Avatar, usePageTitle } from "../components/ui";
 import { StatusBadge } from "./Account";
-import { api, ORDER_STATUSES } from "../lib/api";
+import { api, getMode, ORDER_STATUSES } from "../lib/api";
 import { CATEGORIES, BRANDS } from "../lib/catalog";
 import { money } from "../lib/pricing";
 
@@ -74,6 +74,8 @@ function ProductModal({ product, onClose, onSaved }) {
     } : EMPTY);
     const [error, setError] = useState(null);
     const [saving, setSaving] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const canUpload = getMode() === "remote";
     const set = k => e => setForm(f => ({ ...f, [k]: e.target.type === "checkbox" ? e.target.checked : e.target.value }));
 
     const preview = {
@@ -81,6 +83,23 @@ function ProductModal({ product, onClose, onSaved }) {
         name: form.name,
         art: { kind: form.art, bg: product && form.bg === -1 ? product.art.bg : BG_PRESETS[form.bg] },
         colors: [{ name: "Principal", hex: form.color }],
+        image: form.image,
+    };
+
+    const uploadPhoto = async e => {
+        const file = e.target.files?.[0];
+        e.target.value = "";
+        if (!file) return;
+        setUploading(true);
+        setError(null);
+        try {
+            const { url } = await api.uploadImage(file);
+            setForm(f => ({ ...f, image: url }));
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setUploading(false);
+        }
     };
 
     const save = async e => {
@@ -105,6 +124,7 @@ function ProductModal({ product, onClose, onSaved }) {
             is_new: form.is_new,
             colors,
             art: preview.art,
+            image: form.image || null,
             rating: product?.rating ?? 0,
             reviews_count: product?.reviews_count ?? 0,
             features: product?.features ?? [],
@@ -135,6 +155,18 @@ function ProductModal({ product, onClose, onSaved }) {
                     <div style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 20, alignItems: "start" }}>
                         <div style={{ borderRadius: 20, overflow: "hidden", aspectRatio: 1 }}><ProductArt product={preview} /></div>
                         <div className="stack" style={{ gap: 12 }}>
+                            {canUpload && (
+                                <div className="field"><label>Foto</label>
+                                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                                        <label className="btn btn-ghost btn-sm" style={{ cursor: uploading ? "wait" : "pointer" }}>
+                                            <Upload size={16} /> {uploading ? "Subiendo…" : form.image ? "Cambiar foto" : "Subir foto"}
+                                            <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={uploadPhoto} disabled={uploading} hidden />
+                                        </label>
+                                        {form.image && <button type="button" className="btn btn-ghost btn-sm" onClick={() => setForm(f => ({ ...f, image: null }))}><ImageOff size={16} /> Quitar</button>}
+                                    </div>
+                                    <span className="tiny muted">JPG, PNG, WebP o AVIF · máx. 5 MB. Sin foto se usa la ilustración.</span>
+                                </div>
+                            )}
                             <div className="field"><label>Ilustración</label>
                                 <select className="select" value={form.art} onChange={set("art")}>{ART_KINDS.map(k => <option key={k}>{k}</option>)}</select>
                             </div>

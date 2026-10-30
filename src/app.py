@@ -6,9 +6,17 @@ import os
 import secrets
 from datetime import timedelta
 
+from dotenv import load_dotenv
 from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from werkzeug.middleware.proxy_fix import ProxyFix
+
+# En local, `neon deploy` deja las credenciales de Neon en .env.local.
+# Las variables reales del entorno (Render) siempre tienen prioridad.
+_root = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..")
+load_dotenv(os.path.join(_root, ".env.local"))
+load_dotenv(os.path.join(_root, ".env"))
 
 from api.utils import APIException, generate_sitemap
 from api.models import db
@@ -23,8 +31,11 @@ ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../dist/')
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+# Render termina HTTPS en su proxy: así las URLs que generamos usan https.
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
-# Base de datos: PostgreSQL si hay DATABASE_URL; si no, SQLite local.
+# Base de datos: PostgreSQL si hay DATABASE_URL (en Neon, la URL con -pooler,
+# recomendada para el tráfico de la app); si no, SQLite local.
 # Con SQLite la tienda sigue funcionando y se vuelve a sembrar sola si se reinicia.
 db_url = os.getenv("DATABASE_URL")
 if db_url:

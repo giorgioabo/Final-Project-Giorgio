@@ -22,6 +22,16 @@ services:
           # Sin ella se usa SQLite, que se vuelve a sembrar sola con el catálogo en cada arranque.
           - key: DATABASE_URL
             sync: false
+          # Opcional: fotos de producto en Neon Object Storage (bucket "assets").
+          # Copia los valores de .env.local tras `neon deploy`.
+          - key: AWS_ACCESS_KEY_ID
+            sync: false
+          - key: AWS_SECRET_ACCESS_KEY
+            sync: false
+          - key: AWS_ENDPOINT_URL_S3
+            sync: false
+          - key: AWS_REGION
+            sync: false
           # Opcional: crea un administrador al arrancar.
           - key: ADMIN_EMAIL
             sync: false

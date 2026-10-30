@@ -156,6 +156,9 @@ const local = {
         await requireLocalAdmin();
         save("td_products", localProducts().filter(p => p.id !== id));
     },
+    async uploadImage() {
+        throw new ApiError("Subir fotos requiere el servidor conectado.", 503);
+    },
     async allOrders() {
         await requireLocalAdmin();
         return localOrders();
@@ -197,6 +200,19 @@ const remote = {
         return normalizeProduct(saved);
     },
     deleteProduct: id => http(`/products/${id}`, { method: "DELETE" }),
+    // Sube una foto al bucket de Neon y devuelve { key, url }.
+    async uploadImage(file) {
+        const form = new FormData();
+        form.append("file", file);
+        const res = await fetch(`${BACKEND_URL}/api/admin/uploads`, {
+            method: "POST",
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+            body: form,
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new ApiError(data.error || data.msg || "No se pudo subir la imagen.", res.status);
+        return data;
+    },
     allOrders: () => http("/admin/orders"),
     updateOrderStatus: (id, status) => http(`/admin/orders/${id}`, { method: "PUT", body: { status } }),
     users: () => http("/admin/users"),

@@ -56,7 +56,7 @@ El backend, al arrancar, **crea las tablas y carga el catálogo** si la base de 
 
 **Frontend:** React 18, React Router 6, Vite, CSS propio con design tokens, Lucide Icons, Inter y Space Grotesk.
 **Backend:** Python, Flask, SQLAlchemy 2, Flask-JWT-Extended, Flask-Bcrypt.
-**Base de datos:** PostgreSQL (o SQLite como respaldo).
+**Base de datos:** Lakebase Postgres en Neon (o SQLite como respaldo) y Neon Object Storage para las fotos.
 **Despliegue:** Netlify (frontend) y Render (API).
 
 ---
@@ -95,6 +95,7 @@ Para conectar los dos, añade `VITE_BACKEND_URL=http://localhost:3001` a tu `.en
 | `VITE_BACKEND_URL` | Netlify | URL de la API. Sin ella, la tienda funciona en modo local |
 | `DATABASE_URL` | Render | PostgreSQL (por ejemplo, Neon o Supabase, que no caducan). Sin ella se usa SQLite |
 | `JWT_SECRET_KEY` | Render | Clave para firmar las sesiones |
+| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` / `AWS_ENDPOINT_URL_S3` / `AWS_REGION` | Render | Bucket de Neon Object Storage para las fotos que sube el administrador |
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Render | Crean el administrador al arrancar |
 | `CORS_ORIGINS` | Render | Dominios que pueden llamar a la API (por ejemplo, la URL de Netlify) |
 
@@ -112,6 +113,8 @@ Para conectar los dos, añade `VITE_BACKEND_URL=http://localhost:3001` a tu `.en
 | POST / GET | `/api/orders` | Usuario |
 | GET / PUT | `/api/admin/orders[/:id]` | Admin |
 | GET | `/api/admin/users` | Admin |
+| POST | `/api/admin/uploads` | Admin (sube una foto al bucket) |
+| GET | `/api/media/:key` | Público (redirige a una URL firmada) |
 
 ---
 

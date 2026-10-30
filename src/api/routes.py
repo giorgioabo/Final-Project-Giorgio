@@ -6,12 +6,13 @@ import time
 from collections import defaultdict, deque
 from functools import wraps
 
-from flask import request, jsonify, Blueprint
+from flask import request, jsonify, Blueprint, redirect
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from flask_bcrypt import Bcrypt
 
 from api.models import db, User, Product, Category, Order, OrderItem
 from api.pricing import compute_totals
+from api import storage
 
 api = Blueprint('api', __name__)
 bcrypt = Bcrypt()
@@ -66,7 +67,8 @@ def admin_required(fn):
 def health():
     try:
         db.session.execute(db.text("SELECT 1"))
-        return jsonify({"status": "ok", "database": "ok", "products": Product.query.count()}), 200
+        return jsonify({"status": "ok", "database": "ok", "products": Product.query.count(),
+                        "storage": "ok" if storage.is_configured() else "off"}), 200
     except Exception:
         db.session.rollback()
         return jsonify({"status": "degraded", "database": "error"}), 503
@@ -348,3 +350,33 @@ def admin_update_order(order_id):
 @admin_required
 def get_users():
     return jsonify([u.serialize() for u in User.query.order_by(User.id).all()]), 200
+
+
+# ─────────────────────────────────────────
+# FOTOS (Neon Object Storage)
+# ─────────────────────────────────────────
+
+@api.route('/admin/uploads', methods=['POST'])
+@admin_required
+def upload_product_image():
+    if not storage.is_configured():
+        return error("El almacenamiento de imágenes no está configurado", 503)
+    file = request.files.get('file')
+    if not file:
+        return error("Falta el archivo")
+    try:
+        key = storage.upload_image(file.read(storage.MAX_UPLOAD_BYTES + 1), file.mimetype)
+    except ValueError as e:
+        return error(str(e))
+    # URL estable de la API; al pedirla redirige a una URL firmada del bucket privado.
+    return jsonify({"key": key, "url": f"{request.host_url.rstrip('/')}/api/media/{key}"}), 201
+
+
+@api.route('/media/<path:key>', methods=['GET'])
+def media(key):
+    if not storage.is_configured() or not key.startswith("products/") or ".." in key:
+        return error("No encontrado", 404)
+    response = redirect(storage.presigned_url(key), code=302)
+    # La firma dura una hora; el navegador puede reutilizar la redirección un rato.
+    response.headers["Cache-Control"] = "public, max-age=1800"
+    return response
