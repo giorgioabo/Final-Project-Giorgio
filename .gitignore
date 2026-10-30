@@ -76,6 +76,8 @@ dist/*
 
 # backend stuff
 .venv
+instance/
+.pytest_cache/
 database.database
 database.db
 diagram.png

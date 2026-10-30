@@ -1,27 +1,38 @@
+import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "./pages/Layout";
 import Home from "./pages/Home";
-import Catalog from "./pages/Catalog";
-import ProductDetail from "./pages/ProductDetail";
-import Cart from "./pages/Cart";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Admin from "./pages/Admin";
-import OrderConfirmation from "./pages/OrderConfirmation";
+
+// Las páginas secundarias se cargan bajo demanda para que la portada abra más rápido.
+const Catalog = lazy(() => import("./pages/Catalog"));
+const ProductDetail = lazy(() => import("./pages/ProductDetail"));
+const Cart = lazy(() => import("./pages/Cart"));
+const Checkout = lazy(() => import("./pages/Checkout"));
+const OrderConfirmation = lazy(() => import("./pages/OrderConfirmation"));
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const Account = lazy(() => import("./pages/Account"));
+const Admin = lazy(() => import("./pages/Admin"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+
+const page = el => <Suspense fallback={<div style={{ minHeight: "70vh" }} />}>{el}</Suspense>;
 
 export const router = createBrowserRouter([
     {
         path: "/",
         element: <Layout />,
         children: [
-            { path: "/", element: <Home /> },
-            { path: "/catalog", element: <Catalog /> },
-            { path: "/product/:id", element: <ProductDetail /> },
-            { path: "/cart", element: <Cart /> },
-            { path: "/login", element: <Login /> },
-            { path: "/register", element: <Register /> },
-            { path: "/admin", element: <Admin /> },
-            { path: "/order-confirmation", element: <OrderConfirmation /> },
-        ]
-    }
+            { index: true, element: <Home /> },
+            { path: "catalog", element: page(<Catalog />) },
+            { path: "product/:id/:slug?", element: page(<ProductDetail />) },
+            { path: "cart", element: page(<Cart />) },
+            { path: "checkout", element: page(<Checkout />) },
+            { path: "order-confirmation/:id", element: page(<OrderConfirmation />) },
+            { path: "login", element: page(<Login />) },
+            { path: "register", element: page(<Register />) },
+            { path: "account", element: page(<Account />) },
+            { path: "admin", element: page(<Admin />) },
+            { path: "*", element: page(<NotFound />) },
+        ],
+    },
 ]);

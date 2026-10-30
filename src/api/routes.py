@@ -1,17 +1,76 @@
 """
-This module takes care of starting the API Server, Loading the DB and Adding the endpoints
+Endpoints de la API de TechDrop.
 """
+import re
+import time
+from collections import defaultdict, deque
+from functools import wraps
+
 from flask import request, jsonify, Blueprint
-from api.models import db, User, Product, Category, CartItem, Order, OrderItem
-from api.utils import APIException
-from flask_cors import CORS
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from flask_bcrypt import Bcrypt
-import os
+
+from api.models import db, User, Product, Category, Order, OrderItem
+from api.pricing import compute_totals
 
 api = Blueprint('api', __name__)
-CORS(api)
 bcrypt = Bcrypt()
+
+EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+ORDER_STATUSES = {"paid", "processing", "shipped", "delivered", "cancelled"}
+
+
+def error(message, status=400):
+    return jsonify({"error": message}), status
+
+
+def body():
+    return request.get_json(silent=True) or {}
+
+
+# Limitador sencillo en memoria para frenar ataques de fuerza bruta al login.
+_attempts = defaultdict(deque)
+
+
+def rate_limited(key, limit=10, window=300):
+    now = time.time()
+    hits = _attempts[key]
+    while hits and hits[0] < now - window:
+        hits.popleft()
+    if len(hits) >= limit:
+        return True
+    hits.append(now)
+    return False
+
+
+def current_user():
+    return db.session.get(User, int(get_jwt_identity()))
+
+
+def admin_required(fn):
+    @wraps(fn)
+    @jwt_required()
+    def wrapper(*args, **kwargs):
+        user = current_user()
+        if not user or not user.is_admin:
+            return error("Solo administradores", 403)
+        return fn(*args, **kwargs)
+    return wrapper
+
+
+# ─────────────────────────────────────────
+# HEALTH
+# ─────────────────────────────────────────
+
+@api.route('/health', methods=['GET'])
+def health():
+    try:
+        db.session.execute(db.text("SELECT 1"))
+        return jsonify({"status": "ok", "database": "ok", "products": Product.query.count()}), 200
+    except Exception:
+        db.session.rollback()
+        return jsonify({"status": "degraded", "database": "error"}), 503
+
 
 # ─────────────────────────────────────────
 # AUTH
@@ -19,15 +78,22 @@ bcrypt = Bcrypt()
 
 @api.route('/auth/register', methods=['POST'])
 def register():
-    data = request.get_json()
-    if not data.get('email') or not data.get('password') or not data.get('name'):
-        return jsonify({"error": "Email, password and name are required"}), 400
+    data = body()
+    name = (data.get('name') or '').strip()
+    email = (data.get('email') or '').strip().lower()
+    password = data.get('password') or ''
 
-    if User.query.filter_by(email=data['email']).first():
-        return jsonify({"error": "Email already registered"}), 400
+    if len(name) < 2:
+        return error("Escribe tu nombre")
+    if not EMAIL_RE.match(email):
+        return error("Email no válido")
+    if len(password) < 8:
+        return error("La contraseña debe tener al menos 8 caracteres")
+    if User.query.filter_by(email=email).first():
+        return error("Ya existe una cuenta con este email")
 
-    hashed = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-    user = User(email=data['email'], password=hashed, name=data['name'])
+    user = User(email=email, name=name[:100],
+                password=bcrypt.generate_password_hash(password).decode('utf-8'))
     db.session.add(user)
     db.session.commit()
 
@@ -37,11 +103,14 @@ def register():
 
 @api.route('/auth/login', methods=['POST'])
 def login():
-    data = request.get_json()
-    user = User.query.filter_by(email=data.get('email')).first()
+    data = body()
+    email = (data.get('email') or '').strip().lower()
+    if rate_limited(f"login:{request.remote_addr}:{email}"):
+        return error("Demasiados intentos. Espera unos minutos.", 429)
 
-    if not user or not bcrypt.check_password_hash(user.password, data.get('password', '')):
-        return jsonify({"error": "Invalid credentials"}), 401
+    user = User.query.filter_by(email=email).first()
+    if not user or not user.is_active or not bcrypt.check_password_hash(user.password, data.get('password') or ''):
+        return error("Email o contraseña incorrectos", 401)
 
     token = create_access_token(identity=str(user.id))
     return jsonify({"token": token, "user": user.serialize()}), 200
@@ -50,204 +119,126 @@ def login():
 @api.route('/auth/me', methods=['GET'])
 @jwt_required()
 def me():
-    user = User.query.get(int(get_jwt_identity()))
+    user = current_user()
     if not user:
-        return jsonify({"error": "User not found"}), 404
+        return error("Usuario no encontrado", 404)
     return jsonify(user.serialize()), 200
 
 
 # ─────────────────────────────────────────
-# CATEGORIES
+# CATALOG
 # ─────────────────────────────────────────
 
 @api.route('/categories', methods=['GET'])
 def get_categories():
-    categories = Category.query.all()
-    return jsonify([c.serialize() for c in categories]), 200
+    return jsonify([c.serialize() for c in Category.query.order_by(Category.id).all()]), 200
 
-
-@api.route('/categories', methods=['POST'])
-@jwt_required()
-def create_category():
-    user = User.query.get(int(get_jwt_identity()))
-    if not user.is_admin:
-        return jsonify({"error": "Admin only"}), 403
-
-    data = request.get_json()
-    if not data.get('name') or not data.get('slug'):
-        return jsonify({"error": "Name and slug are required"}), 400
-
-    category = Category(name=data['name'], slug=data['slug'])
-    db.session.add(category)
-    db.session.commit()
-    return jsonify(category.serialize()), 201
-
-
-# ─────────────────────────────────────────
-# PRODUCTS
-# ─────────────────────────────────────────
 
 @api.route('/products', methods=['GET'])
 def get_products():
-    category_slug = request.args.get('category')
-    featured = request.args.get('featured')
-    min_price = request.args.get('min_price', type=float)
-    max_price = request.args.get('max_price', type=float)
-    sort = request.args.get('sort')
-
     query = Product.query
-
-    if category_slug:
-        category = Category.query.filter_by(slug=category_slug).first()
-        if category:
-            query = query.filter_by(category_id=category.id)
-
-    if featured == 'true':
+    category = request.args.get('category')
+    if category:
+        query = query.join(Category).filter(Category.slug == category)
+    if request.args.get('featured') == 'true':
         query = query.filter_by(is_featured=True)
-
-    if min_price is not None:
-        query = query.filter(Product.price >= min_price)
-
-    if max_price is not None:
-        query = query.filter(Product.price <= max_price)
-
-    if sort == 'price_asc':
-        query = query.order_by(Product.price.asc())
-    elif sort == 'price_desc':
-        query = query.order_by(Product.price.desc())
-
-    products = query.all()
-    return jsonify([p.serialize() for p in products]), 200
+    q = (request.args.get('q') or '').strip()
+    if q:
+        like = f"%{q}%"
+        query = query.filter(db.or_(Product.name.ilike(like), Product.brand.ilike(like)))
+    return jsonify([p.serialize() for p in query.order_by(Product.id).all()]), 200
 
 
 @api.route('/products/<int:product_id>', methods=['GET'])
 def get_product(product_id):
-    product = Product.query.get_or_404(product_id)
+    product = db.session.get(Product, product_id)
+    if not product:
+        return error("Producto no encontrado", 404)
     return jsonify(product.serialize()), 200
 
 
-@api.route('/products', methods=['POST'])
-@jwt_required()
-def create_product():
-    user = User.query.get(int(get_jwt_identity()))
-    if not user.is_admin:
-        return jsonify({"error": "Admin only"}), 403
+def apply_product_data(product, data):
+    if 'name' in data:
+        name = (data.get('name') or '').strip()
+        if not name:
+            raise ValueError("El nombre es obligatorio")
+        product.name = name[:200]
+    if 'price' in data:
+        price = float(data['price'])
+        if price <= 0:
+            raise ValueError("El precio debe ser mayor que 0")
+        product.price = price
+    if 'compare_at_price' in data:
+        cap = data.get('compare_at_price')
+        product.compare_at_price = float(cap) if cap not in (None, "") else None
+    if 'stock' in data:
+        stock = int(data['stock'])
+        if stock < 0:
+            raise ValueError("El stock no puede ser negativo")
+        product.stock = stock
+    for field in ('slug', 'brand', 'description', 'badge'):
+        if field in data:
+            setattr(product, field, data[field])
+    for field in ('is_featured', 'is_new'):
+        if field in data:
+            setattr(product, field, bool(data[field]))
+    for field in ('rating', 'reviews_count'):
+        if field in data and data[field] is not None:
+            setattr(product, field, data[field])
+    if 'category' in data:
+        category = Category.query.filter_by(slug=data['category']).first()
+        if not category:
+            raise ValueError("Categoría no válida")
+        product.category_id = category.id
+    details = dict(product.details or {})
+    for key in Product.DETAIL_FIELDS:
+        if key in data:
+            details[key] = data[key]
+    product.details = details
 
-    data = request.get_json()
-    product = Product(
-        name=data['name'],
-        description=data.get('description'),
-        price=data['price'],
-        stock=data.get('stock', 0),
-        image_url=data.get('image_url'),
-        is_featured=data.get('is_featured', False),
-        category_id=data.get('category_id')
-    )
+
+@api.route('/products', methods=['POST'])
+@admin_required
+def create_product():
+    product = Product()
+    try:
+        data = body()
+        if 'name' not in data or 'price' not in data:
+            raise ValueError("Nombre y precio son obligatorios")
+        apply_product_data(product, data)
+    except (ValueError, TypeError) as e:
+        return error(str(e))
     db.session.add(product)
     db.session.commit()
     return jsonify(product.serialize()), 201
 
 
 @api.route('/products/<int:product_id>', methods=['PUT'])
-@jwt_required()
+@admin_required
 def update_product(product_id):
-    user = User.query.get(int(get_jwt_identity()))
-    if not user.is_admin:
-        return jsonify({"error": "Admin only"}), 403
-
-    product = Product.query.get_or_404(product_id)
-    data = request.get_json()
-
-    product.name = data.get('name', product.name)
-    product.description = data.get('description', product.description)
-    product.price = data.get('price', product.price)
-    product.stock = data.get('stock', product.stock)
-    product.image_url = data.get('image_url', product.image_url)
-    product.is_featured = data.get('is_featured', product.is_featured)
-    product.category_id = data.get('category_id', product.category_id)
-
+    product = db.session.get(Product, product_id)
+    if not product:
+        return error("Producto no encontrado", 404)
+    try:
+        apply_product_data(product, body())
+    except (ValueError, TypeError) as e:
+        db.session.rollback()
+        return error(str(e))
     db.session.commit()
     return jsonify(product.serialize()), 200
 
 
 @api.route('/products/<int:product_id>', methods=['DELETE'])
-@jwt_required()
+@admin_required
 def delete_product(product_id):
-    user = User.query.get(int(get_jwt_identity()))
-    if not user.is_admin:
-        return jsonify({"error": "Admin only"}), 403
-
-    product = Product.query.get_or_404(product_id)
+    product = db.session.get(Product, product_id)
+    if not product:
+        return error("Producto no encontrado", 404)
+    # Los pedidos antiguos conservan nombre y precio aunque el producto desaparezca.
+    OrderItem.query.filter_by(product_id=product.id).update({"product_id": None})
     db.session.delete(product)
     db.session.commit()
-    return jsonify({"message": "Product deleted"}), 200
-
-
-# ─────────────────────────────────────────
-# CART
-# ─────────────────────────────────────────
-
-@api.route('/cart', methods=['GET'])
-@jwt_required()
-def get_cart():
-    user_id = int(get_jwt_identity())
-    items = CartItem.query.filter_by(user_id=user_id).all()
-    return jsonify([item.serialize() for item in items]), 200
-
-
-@api.route('/cart', methods=['POST'])
-@jwt_required()
-def add_to_cart():
-    user_id = int(get_jwt_identity())
-    data = request.get_json()
-    product_id = data.get('product_id')
-    quantity = data.get('quantity', 1)
-
-    if not product_id:
-        return jsonify({"error": "product_id is required"}), 400
-
-    existing = CartItem.query.filter_by(user_id=user_id, product_id=product_id).first()
-    if existing:
-        existing.quantity += quantity
-    else:
-        item = CartItem(user_id=user_id, product_id=product_id, quantity=quantity)
-        db.session.add(item)
-
-    db.session.commit()
-    items = CartItem.query.filter_by(user_id=user_id).all()
-    return jsonify([item.serialize() for item in items]), 200
-
-
-@api.route('/cart/<int:item_id>', methods=['PUT'])
-@jwt_required()
-def update_cart_item(item_id):
-    user_id = int(get_jwt_identity())
-    item = CartItem.query.filter_by(id=item_id, user_id=user_id).first_or_404()
-    data = request.get_json()
-    item.quantity = data.get('quantity', item.quantity)
-    db.session.commit()
-    items = CartItem.query.filter_by(user_id=user_id).all()
-    return jsonify([item.serialize() for item in items]), 200
-
-
-@api.route('/cart/<int:item_id>', methods=['DELETE'])
-@jwt_required()
-def remove_cart_item(item_id):
-    user_id = int(get_jwt_identity())
-    item = CartItem.query.filter_by(id=item_id, user_id=user_id).first_or_404()
-    db.session.delete(item)
-    db.session.commit()
-    items = CartItem.query.filter_by(user_id=user_id).all()
-    return jsonify([item.serialize() for item in items]), 200
-
-
-@api.route('/cart/clear', methods=['DELETE'])
-@jwt_required()
-def clear_cart():
-    user_id = int(get_jwt_identity())
-    CartItem.query.filter_by(user_id=user_id).delete()
-    db.session.commit()
-    return jsonify([]), 200
+    return jsonify({"message": "Producto eliminado"}), 200
 
 
 # ─────────────────────────────────────────
@@ -257,53 +248,103 @@ def clear_cart():
 @api.route('/orders', methods=['POST'])
 @jwt_required()
 def create_order():
-    user_id = int(get_jwt_identity())
-    cart_items = CartItem.query.filter_by(user_id=user_id).all()
+    user = current_user()
+    data = body()
+    items = data.get('items') or []
+    address = data.get('shipping_address') or {}
 
-    if not cart_items:
-        return jsonify({"error": "Cart is empty"}), 400
+    if not isinstance(items, list) or not items:
+        return error("El carrito está vacío")
+    for field in ('name', 'street', 'city', 'zip'):
+        if not str(address.get(field) or '').strip():
+            return error("La dirección de envío está incompleta")
 
-    total = sum(item.product.price * item.quantity for item in cart_items)
+    lines = []
+    for item in items:
+        try:
+            quantity = int(item.get('quantity', 0))
+            product_id = int(item.get('product_id'))
+        except (TypeError, ValueError):
+            return error("Producto no válido")
+        if quantity < 1 or quantity > 99:
+            return error("Cantidad no válida")
+        # Bloqueamos la fila para que dos compras simultáneas no vendan el mismo stock.
+        product = db.session.query(Product).filter_by(id=product_id).with_for_update().first()
+        if not product:
+            return error("Un producto del carrito ya no existe")
+        if product.stock < quantity:
+            db.session.rollback()
+            return error(f"Solo quedan {product.stock} unidades de {product.name}")
+        lines.append((product, quantity, item))
 
-    order = Order(user_id=user_id, total=total, status="completed")
+    totals = compute_totals([(p.price, q) for p, q, _ in lines],
+                            coupon=data.get('coupon'),
+                            shipping_method=data.get('shipping_method', 'standard'))
+
+    order = Order(
+        user_id=user.id,
+        status="paid",
+        shipping_method="express" if data.get('shipping_method') == "express" else "standard",
+        shipping_address={k: str(address.get(k, ''))[:200] for k in ('name', 'phone', 'street', 'city', 'zip', 'province')},
+        **totals,
+    )
     db.session.add(order)
     db.session.flush()
 
-    for item in cart_items:
-        order_item = OrderItem(
+    for product, quantity, item in lines:
+        db.session.add(OrderItem(
             order_id=order.id,
-            product_id=item.product_id,
-            quantity=item.quantity,
-            unit_price=item.product.price
-        )
-        db.session.add(order_item)
-        product = Product.query.get(item.product_id)
-        product.stock = max(0, product.stock - item.quantity)
+            product_id=product.id,
+            name=product.name,
+            color=(item.get('color') or None),
+            option=(item.get('option') or None),
+            quantity=quantity,
+            unit_price=product.price,
+        ))
+        product.stock -= quantity
 
-    CartItem.query.filter_by(user_id=user_id).delete()
     db.session.commit()
-
     return jsonify(order.serialize()), 201
 
 
 @api.route('/orders', methods=['GET'])
 @jwt_required()
 def get_orders():
-    user_id = int(get_jwt_identity())
-    orders = Order.query.filter_by(user_id=user_id).order_by(Order.created_at.desc()).all()
+    orders = Order.query.filter_by(user_id=int(get_jwt_identity())).order_by(Order.created_at.desc()).all()
     return jsonify([o.serialize() for o in orders]), 200
 
 
 # ─────────────────────────────────────────
-# ADMIN — Users list
+# ADMIN
 # ─────────────────────────────────────────
 
-@api.route('/admin/users', methods=['GET'])
-@jwt_required()
-def get_users():
-    user = User.query.get(int(get_jwt_identity()))
-    if not user.is_admin:
-        return jsonify({"error": "Admin only"}), 403
+@api.route('/admin/orders', methods=['GET'])
+@admin_required
+def admin_orders():
+    orders = Order.query.order_by(Order.created_at.desc()).all()
+    return jsonify([o.serialize() for o in orders]), 200
 
-    users = User.query.all()
-    return jsonify([u.serialize() for u in users]), 200
+
+@api.route('/admin/orders/<int:order_id>', methods=['PUT'])
+@admin_required
+def admin_update_order(order_id):
+    order = db.session.get(Order, order_id)
+    if not order:
+        return error("Pedido no encontrado", 404)
+    status = body().get('status')
+    if status not in ORDER_STATUSES:
+        return error("Estado no válido")
+    if status == "cancelled" and order.status != "cancelled":
+        # Devolvemos el stock al cancelar.
+        for item in order.items:
+            if item.product:
+                item.product.stock += item.quantity
+    order.status = status
+    db.session.commit()
+    return jsonify(order.serialize()), 200
+
+
+@api.route('/admin/users', methods=['GET'])
+@admin_required
+def get_users():
+    return jsonify([u.serialize() for u in User.query.order_by(User.id).all()]), 200

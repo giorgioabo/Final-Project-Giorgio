@@ -1,131 +1,94 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Loader2, Check } from "lucide-react";
 import useGlobalReducer from "../hooks/useGlobalReducer";
+import AuthShell from "../components/AuthShell";
+import { usePageTitle } from "../components/ui";
+import { api } from "../lib/api";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+function strength(pw) {
+    let s = 0;
+    if (pw.length >= 8) s++;
+    if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) s++;
+    if (/\d/.test(pw)) s++;
+    if (/[^A-Za-z0-9]/.test(pw)) s++;
+    return s;
+}
 
 export default function Register() {
-    const { dispatch } = useGlobalReducer();
+    usePageTitle("Crear cuenta");
+    const { actions } = useGlobalReducer();
     const navigate = useNavigate();
-    const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
+    const [params] = useSearchParams();
+    const next = params.get("next") || "/";
+    const [form, setForm] = useState({ name: "", email: "", password: "" });
+    const [errors, setErrors] = useState({});
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const s = strength(form.password);
+    const set = k => e => setForm(f => ({ ...f, [k]: e.target.value }));
 
-    const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
-
-    const handleSubmit = async e => {
+    const submit = async e => {
         e.preventDefault();
-        setError(null);
-
-        if (form.password !== form.confirm) {
-            setError("Las contraseñas no coinciden");
-            return;
-        }
-        if (form.password.length < 6) {
-            setError("La contraseña debe tener al menos 6 caracteres");
-            return;
-        }
-
+        const errs = {};
+        if (form.name.trim().length < 2) errs.name = "Escribe tu nombre";
+        if (!/^\S+@\S+\.\S+$/.test(form.email)) errs.email = "Email no válido";
+        if (form.password.length < 8) errs.password = "Mínimo 8 caracteres";
+        setErrors(errs);
+        if (Object.keys(errs).length) return;
         setLoading(true);
-        const res = await fetch(`${BACKEND_URL}/api/auth/register`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name: form.name, email: form.email, password: form.password })
-        });
-
-        const data = await res.json();
-        setLoading(false);
-
-        if (!res.ok) {
-            setError(data.error || "Error al registrarse");
-            return;
+        setError(null);
+        try {
+            const res = await api.register(form.name, form.email, form.password);
+            actions.signIn(res);
+            actions.toast("¡Cuenta creada! Bienvenido a TechDrop");
+            navigate(next, { replace: true });
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
         }
-
-        dispatch({ type: "SET_TOKEN", payload: { token: data.token, user: data.user } });
-        navigate("/");
     };
 
     return (
-        <div className="container py-5">
-            <div className="row justify-content-center">
-                <div className="col-md-5">
-                    <div className="card border-0 shadow p-4">
-                        <div className="text-center mb-4">
-                            <div style={{ fontSize: "3rem" }}>⚡</div>
-                            <h2 className="fw-bold">Crear cuenta</h2>
-                            <p className="text-muted">Únete a TechDrop hoy</p>
-                        </div>
-
-                        {error && (
-                            <div className="alert alert-danger py-2">{error}</div>
-                        )}
-
-                        <div>
-                            <div className="mb-3">
-                                <label className="form-label fw-semibold">Nombre</label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    className="form-control"
-                                    placeholder="Tu nombre"
-                                    value={form.name}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <label className="form-label fw-semibold">Email</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    className="form-control"
-                                    placeholder="tu@email.com"
-                                    value={form.email}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <label className="form-label fw-semibold">Contraseña</label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    className="form-control"
-                                    placeholder="Mínimo 6 caracteres"
-                                    value={form.password}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="form-label fw-semibold">Confirmar contraseña</label>
-                                <input
-                                    type="password"
-                                    name="confirm"
-                                    className="form-control"
-                                    placeholder="Repite tu contraseña"
-                                    value={form.confirm}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                            <button
-                                className="btn btn-warning btn-lg w-100 fw-bold"
-                                onClick={handleSubmit}
-                                disabled={loading}
-                            >
-                                {loading ? "Creando cuenta..." : "Crear cuenta"}
-                            </button>
-                        </div>
-
-                        <hr className="my-4" />
-                        <p className="text-center mb-0">
-                            ¿Ya tienes cuenta?{" "}
-                            <Link to="/login" className="text-warning fw-bold">Inicia sesión</Link>
-                        </p>
-                    </div>
+        <AuthShell>
+            <form onSubmit={submit} noValidate>
+                <div>
+                    <h1 className="display-2" style={{ fontSize: 40 }}>Crea tu cuenta</h1>
+                    <p className="muted" style={{ marginTop: 8 }}>Guarda favoritos, sigue tus pedidos y compra en un clic.</p>
                 </div>
-            </div>
-        </div>
+                {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                <div className="field">
+                    <label htmlFor="name">Nombre</label>
+                    <input id="name" className={`input ${errors.name ? "invalid" : ""}`} autoComplete="name" value={form.name} onChange={set("name")} />
+                    {errors.name && <span className="error">{errors.name}</span>}
+                </div>
+                <div className="field">
+                    <label htmlFor="email">Email</label>
+                    <input id="email" className={`input ${errors.email ? "invalid" : ""}`} type="email" autoComplete="email" value={form.email} onChange={set("email")} />
+                    {errors.email && <span className="error">{errors.email}</span>}
+                </div>
+                <div className="field">
+                    <label htmlFor="password">Contraseña</label>
+                    <input id="password" className={`input ${errors.password ? "invalid" : ""}`} type="password" autoComplete="new-password" value={form.password} onChange={set("password")} />
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 4, marginTop: 4 }}>
+                        {[0, 1, 2, 3].map(i => (
+                            <span key={i} style={{ height: 4, borderRadius: 4, background: i < s ? ["#e0352b", "#c27a00", "#12a150", "#12a150"][s - 1] : "var(--surface-2)" }} />
+                        ))}
+                    </div>
+                    {errors.password ? <span className="error">{errors.password}</span> : <span className="tiny muted">Usa 8+ caracteres con mayúsculas, números y símbolos.</span>}
+                </div>
+                <button className="btn btn-primary btn-lg btn-block" disabled={loading} type="submit">
+                    {loading ? <Loader2 size={18} className="spin" /> : "Crear cuenta"}
+                </button>
+                <ul className="feature-list small muted">
+                    <li><Check size={16} /> Seguimiento de pedidos en tiempo real</li>
+                    <li><Check size={16} /> Ofertas exclusivas para miembros</li>
+                </ul>
+                <p className="small muted" style={{ textAlign: "center" }}>
+                    ¿Ya tienes cuenta? <Link to="/login" style={{ color: "var(--ink)", fontWeight: 600 }}>Inicia sesión</Link>
+                </p>
+            </form>
+        </AuthShell>
     );
 }

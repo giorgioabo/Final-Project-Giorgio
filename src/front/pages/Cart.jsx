@@ -1,170 +1,91 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import useGlobalReducer from "../hooks/useGlobalReducer";
+import { ShoppingBag, Tag, Lock, ArrowLeft } from "lucide-react";
+import { useCartLines } from "../hooks/useGlobalReducer";
+import { CartLine, ShippingProgress } from "../components/CartDrawer";
+import { Breadcrumbs, usePageTitle } from "../components/ui";
+import { computeTotals, money, validateCoupon } from "../lib/pricing";
+import { load, save } from "../lib/storage";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+export function CouponBox({ subtotal, coupon, onChange }) {
+    const [code, setCode] = useState(coupon || "");
+    const [error, setError] = useState(null);
+    const apply = e => {
+        e.preventDefault();
+        const res = validateCoupon(code, subtotal);
+        if (!res || res.error) { setError(res?.error || "Introduce un código"); return; }
+        setError(null);
+        onChange(res.code);
+    };
+    if (coupon) {
+        return (
+            <div className="row-between small">
+                <span className="badge badge-success"><Tag size={12} /> {coupon}</span>
+                <button className="link-btn" onClick={() => { onChange(null); setCode(""); }}>Quitar</button>
+            </div>
+        );
+    }
+    return (
+        <form onSubmit={apply} className="field">
+            <div style={{ display: "flex", gap: 8 }}>
+                <input className={`input ${error ? "invalid" : ""}`} style={{ height: 44 }} placeholder="Código de descuento" value={code} onChange={e => setCode(e.target.value)} aria-label="Código de descuento" />
+                <button className="btn btn-outline btn-sm" style={{ height: 44 }} type="submit">Aplicar</button>
+            </div>
+            {error && <span className="error">{error}</span>}
+        </form>
+    );
+}
+
+export function Summary({ totals, children }) {
+    return (
+        <div className="stack" style={{ gap: 12 }}>
+            <div className="summary-row"><span className="muted">Subtotal</span><span className="mono">{money(totals.subtotal)}</span></div>
+            {totals.discount > 0 && <div className="summary-row" style={{ color: "var(--success)" }}><span>Descuento ({totals.coupon})</span><span className="mono">−{money(totals.discount)}</span></div>}
+            <div className="summary-row"><span className="muted">Envío</span><span className="mono">{totals.shipping === 0 ? "Gratis" : money(totals.shipping)}</span></div>
+            {children}
+            <div className="summary-row total"><span>Total</span><span className="mono">{money(totals.total)}</span></div>
+            <span className="tiny muted" style={{ textAlign: "right" }}>Incluye {money(totals.vat)} de IVA</span>
+        </div>
+    );
+}
 
 export default function Cart() {
-    const { store, dispatch } = useGlobalReducer();
+    usePageTitle("Carrito");
+    const lines = useCartLines();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!store.token) return;
-        fetch(`${BACKEND_URL}/api/cart`, {
-            headers: { "Authorization": `Bearer ${store.token}` }
-        })
-            .then(res => res.json())
-            .then(data => dispatch({ type: "SET_CART", payload: data }));
-    }, [store.token]);
-
-    const updateQuantity = async (itemId, quantity) => {
-        if (quantity < 1) return;
-        const res = await fetch(`${BACKEND_URL}/api/cart/${itemId}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${store.token}`
-            },
-            body: JSON.stringify({ quantity })
-        });
-        if (res.ok) {
-            const data = await res.json();
-            dispatch({ type: "SET_CART", payload: data });
-        }
-    };
-
-    const removeItem = async (itemId) => {
-        const res = await fetch(`${BACKEND_URL}/api/cart/${itemId}`, {
-            method: "DELETE",
-            headers: { "Authorization": `Bearer ${store.token}` }
-        });
-        if (res.ok) {
-            const data = await res.json();
-            dispatch({ type: "SET_CART", payload: data });
-        }
-    };
-
-    const handleCheckout = async () => {
-        const res = await fetch(`${BACKEND_URL}/api/orders`, {
-            method: "POST",
-            headers: { "Authorization": `Bearer ${store.token}` }
-        });
-        if (res.ok) {
-            dispatch({ type: "SET_CART", payload: [] });
-            navigate("/order-confirmation");
-        }
-    };
-
-    const total = store.cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
-
-    if (!store.token) {
-        return (
-            <div className="container py-5 text-center">
-                <div style={{ fontSize: "5rem" }}>🔒</div>
-                <h3 className="mt-3">Inicia sesión para ver tu carrito</h3>
-                <Link to="/login" className="btn btn-warning btn-lg mt-3">Iniciar sesión</Link>
-            </div>
-        );
-    }
-
-    if (store.cart.length === 0) {
-        return (
-            <div className="container py-5 text-center">
-                <div style={{ fontSize: "5rem" }}>🛒</div>
-                <h3 className="mt-3">Tu carrito está vacío</h3>
-                <p className="text-muted">Añade productos desde el catálogo</p>
-                <Link to="/catalog" className="btn btn-dark btn-lg mt-3">Ver catálogo</Link>
-            </div>
-        );
-    }
+    const [coupon, setCoupon] = useState(() => load("td_coupon", null));
+    const totals = computeTotals(lines, { coupon });
+    const changeCoupon = c => { setCoupon(c); save("td_coupon", c); };
 
     return (
-        <div className="container py-5">
-            <h1 className="fw-bold mb-4">🛒 Tu carrito</h1>
-            <div className="row g-4">
-
-                {/* ITEMS */}
-                <div className="col-lg-8">
-                    {store.cart.map(item => (
-                        <div className="card border-0 shadow-sm mb-3" key={item.id}>
-                            <div className="card-body">
-                                <div className="row align-items-center g-3">
-                                    <div className="col-3 col-md-2">
-                                        <img
-                                            src={item.product.image_url}
-                                            alt={item.product.name}
-                                            className="img-fluid rounded"
-                                            style={{ height: "70px", objectFit: "cover", width: "100%" }}
-                                        />
-                                    </div>
-                                    <div className="col-9 col-md-4">
-                                        <h6 className="fw-bold mb-1">{item.product.name}</h6>
-                                        <span className="text-warning fw-bold">${item.product.price.toFixed(2)}</span>
-                                    </div>
-                                    <div className="col-6 col-md-3">
-                                        <div className="input-group input-group-sm">
-                                            <button
-                                                className="btn btn-outline-secondary"
-                                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                            >−</button>
-                                            <input
-                                                type="number"
-                                                className="form-control text-center"
-                                                value={item.quantity}
-                                                onChange={e => updateQuantity(item.id, parseInt(e.target.value) || 1)}
-                                            />
-                                            <button
-                                                className="btn btn-outline-secondary"
-                                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                            >+</button>
-                                        </div>
-                                    </div>
-                                    <div className="col-4 col-md-2 text-end">
-                                        <span className="fw-bold">${(item.product.price * item.quantity).toFixed(2)}</span>
-                                    </div>
-                                    <div className="col-2 col-md-1 text-end">
-                                        <button
-                                            className="btn btn-sm btn-outline-danger"
-                                            onClick={() => removeItem(item.id)}
-                                        >✕</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+        <div className="container">
+            <div className="page-head">
+                <Breadcrumbs items={[{ label: "Inicio", to: "/" }, { label: "Carrito" }]} />
+                <h1 className="display-2">Tu carrito</h1>
+            </div>
+            {lines.length === 0 ? (
+                <div className="empty card">
+                    <div className="ico"><ShoppingBag size={28} /></div>
+                    <h2 className="h3">Tu carrito está vacío</h2>
+                    <p className="muted">Aún no has añadido nada. ¡Hay mucho por descubrir!</p>
+                    <Link to="/catalog" className="btn btn-primary">Explorar la tienda</Link>
                 </div>
-
-                {/* SUMMARY */}
-                <div className="col-lg-4">
-                    <div className="card border-0 shadow-sm p-4">
-                        <h5 className="fw-bold mb-4">Resumen del pedido</h5>
-                        <div className="d-flex justify-content-between mb-2">
-                            <span className="text-muted">Subtotal</span>
-                            <span>${total.toFixed(2)}</span>
-                        </div>
-                        <div className="d-flex justify-content-between mb-2">
-                            <span className="text-muted">Envío</span>
-                            <span className="text-success">{total >= 99 ? "Gratis" : "$9.99"}</span>
-                        </div>
-                        <hr />
-                        <div className="d-flex justify-content-between mb-4">
-                            <span className="fw-bold fs-5">Total</span>
-                            <span className="fw-bold fs-5 text-warning">
-                                ${(total >= 99 ? total : total + 9.99).toFixed(2)}
-                            </span>
-                        </div>
-                        <button
-                            className="btn btn-warning btn-lg w-100 fw-bold"
-                            onClick={handleCheckout}
-                        >
-                            Confirmar pedido ✓
-                        </button>
-                        <Link to="/catalog" className="btn btn-outline-secondary w-100 mt-2">
-                            Seguir comprando
-                        </Link>
+            ) : (
+                <div className="two-col">
+                    <div className="card card-pad">
+                        <ShippingProgress subtotal={totals.subtotal} />
+                        <div style={{ marginTop: 8 }}>{lines.map(l => <CartLine key={l.key} line={l} />)}</div>
+                        <Link to="/catalog" className="btn btn-ghost btn-sm" style={{ marginTop: 16 }}><ArrowLeft size={16} /> Seguir comprando</Link>
+                    </div>
+                    <div className="card card-pad sticky-card stack">
+                        <h2 className="h3">Resumen del pedido</h2>
+                        <CouponBox subtotal={totals.subtotal} coupon={totals.coupon} onChange={changeCoupon} />
+                        <Summary totals={totals} />
+                        <button className="btn btn-accent btn-lg btn-block" onClick={() => navigate("/checkout")}><Lock size={16} /> Tramitar pedido</button>
+                        <p className="tiny muted" style={{ textAlign: "center" }}>Prueba los códigos TECHDROP10 o BIENVENIDA</p>
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }

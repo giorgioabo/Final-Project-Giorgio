@@ -1,125 +1,272 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { ArrowRight, ArrowUpRight, Truck, ShieldCheck, RotateCcw, Headphones, BadgeCheck, Sparkles, Zap } from "lucide-react";
 import useGlobalReducer from "../hooks/useGlobalReducer";
+import ProductArt from "../components/ProductArt";
+import ProductCard from "../components/ProductCard";
+import { Reveal, Stars, usePageTitle, Avatar } from "../components/ui";
+import { CATEGORIES, discountPercent } from "../lib/catalog";
+import { money } from "../lib/pricing";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
-export default function Home() {
-	const { store, dispatch } = useGlobalReducer();
-
-	useEffect(() => {
-		fetch(`${BACKEND_URL}/api/products?featured=true`)
-			.then(res => res.json())
-			.then(data => dispatch({ type: "SET_PRODUCTS", payload: data }));
-
-		fetch(`${BACKEND_URL}/api/categories`)
-			.then(res => res.json())
-			.then(data => dispatch({ type: "SET_CATEGORIES", payload: data }));
-	}, []);
-
-	return (
-		<div>
-			{/* HERO */}
-			<section className="bg-dark text-white py-5">
-				<div className="container py-5">
-					<div className="row align-items-center">
-						<div className="col-lg-6">
-							<h1 className="display-4 fw-bold mb-3">
-								⚡ La tecnología <br />
-								<span className="text-warning">que necesitas</span>
-							</h1>
-							<p className="lead text-secondary mb-4">
-								Smartphones, laptops, audio y gaming al mejor precio.
-								Envío rápido y garantía incluida.
-							</p>
-							<Link to="/catalog" className="btn btn-warning btn-lg fw-bold px-5">
-								Ver catálogo →
-							</Link>
-						</div>
-						<div className="col-lg-6 text-center mt-4 mt-lg-0">
-							<div style={{ fontSize: "10rem" }}>🖥️</div>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			{/* CATEGORIES */}
-			<section className="py-5 bg-light">
-				<div className="container">
-					<h2 className="fw-bold mb-4 text-center">Explora por categoría</h2>
-					<div className="row g-3 justify-content-center">
-						{store.categories.map(cat => (
-							<div className="col-6 col-md-4 col-lg-2" key={cat.id}>
-								<Link
-									to={`/catalog?category=${cat.slug}`}
-									className="card text-center text-decoration-none h-100 border-0 shadow-sm"
-								>
-									<div className="card-body py-4">
-										<div style={{ fontSize: "2rem" }}>
-											{getCategoryEmoji(cat.slug)}
-										</div>
-										<p className="mb-0 fw-semibold text-dark mt-2">{cat.name}</p>
-									</div>
-								</Link>
-							</div>
-						))}
-					</div>
-				</div>
-			</section>
-
-			{/* FEATURED PRODUCTS */}
-			<section className="py-5">
-				<div className="container">
-					<h2 className="fw-bold mb-4 text-center">Productos destacados</h2>
-					<div className="row g-4">
-						{store.products.map(product => (
-							<div className="col-sm-6 col-lg-3" key={product.id}>
-								<Link to={`/product/${product.id}`} className="text-decoration-none">
-									<div className="card h-100 border-0 shadow-sm">
-										<img
-											src={product.image_url}
-											className="card-img-top"
-											alt={product.name}
-											style={{ height: "200px", objectFit: "cover" }}
-										/>
-										<div className="card-body">
-											<h6 className="card-title text-dark fw-bold">{product.name}</h6>
-											<p className="text-warning fw-bold fs-5 mb-0">
-												${product.price.toFixed(2)}
-											</p>
-										</div>
-									</div>
-								</Link>
-							</div>
-						))}
-					</div>
-					<div className="text-center mt-5">
-						<Link to="/catalog" className="btn btn-dark btn-lg px-5">
-							Ver todos los productos
-						</Link>
-					</div>
-				</div>
-			</section>
-
-			{/* BANNER */}
-			<section className="bg-warning py-5">
-				<div className="container text-center">
-					<h2 className="fw-bold mb-2">🚀 Envío gratis en pedidos +$99</h2>
-					<p className="mb-3">Garantía de 2 años en todos los productos. Pago 100% seguro.</p>
-					<Link to="/catalog" className="btn btn-dark btn-lg px-5">Comprar ahora</Link>
-				</div>
-			</section>
-		</div>
-	);
+function useCountdown() {
+    // Oferta que se renueva cada domingo a medianoche.
+    const target = useMemo(() => {
+        const d = new Date();
+        d.setDate(d.getDate() + ((7 - d.getDay()) % 7 || 7));
+        d.setHours(23, 59, 59, 0);
+        return d.getTime();
+    }, []);
+    const [now, setNow] = useState(Date.now());
+    useEffect(() => {
+        const t = setInterval(() => setNow(Date.now()), 1000);
+        return () => clearInterval(t);
+    }, []);
+    const s = Math.max(0, Math.floor((target - now) / 1000));
+    return { d: Math.floor(s / 86400), h: Math.floor(s / 3600) % 24, m: Math.floor(s / 60) % 60, s: s % 60 };
 }
 
-function getCategoryEmoji(slug) {
-	const map = {
-		smartphones: "📱",
-		laptops: "💻",
-		audio: "🎧",
-		gaming: "🎮",
-		accessories: "🖱️",
-	};
-	return map[slug] || "📦";
+const TESTIMONIALS = [
+    { name: "Laura Méndez", role: "Diseñadora UX", text: "Pedí el Kairo Book 14 un lunes por la noche y el martes ya estaba trabajando con él. La experiencia de compra fue impecable." },
+    { name: "Andrés Ruiz", role: "Streamer", text: "Los mejores precios que he encontrado en periféricos gaming, y el soporte me respondió en minutos cuando tuve una duda." },
+    { name: "Carmen Ortega", role: "Fotógrafa", text: "Me encanta que cada producto tenga especificaciones claras y reseñas reales. Compré con total confianza." },
+];
+
+const PERKS = [
+    { icon: Truck, title: "Envío en 24 h", text: "Gratis en pedidos desde 99 €. Recíbelo mañana en península." },
+    { icon: ShieldCheck, title: "2 años de garantía", text: "Todos los productos, sin letra pequeña ni sorpresas." },
+    { icon: RotateCcw, title: "30 días de devolución", text: "¿No te convence? Te devolvemos el dinero, sin preguntas." },
+    { icon: Headphones, title: "Soporte experto", text: "Personas reales que saben de tecnología, 7 días a la semana." },
+];
+
+export default function Home() {
+    usePageTitle();
+    const { store, actions } = useGlobalReducer();
+    const { products } = store;
+    const t = useCountdown();
+    const [email, setEmail] = useState("");
+
+    const featured = products.filter(p => p.is_featured).slice(0, 8);
+    const newest = products.filter(p => p.is_new).slice(0, 4);
+    const deal = [...products].filter(p => p.stock > 0).sort((a, b) => discountPercent(b) - discountPercent(a))[0];
+    const heroA = products.find(p => p.slug === "kairo-book-14") || products[0];
+    const heroB = products.find(p => p.slug === "lumen-h9") || products[1];
+    const heroC = products.find(p => p.slug === "aurion-watch-s") || products[2];
+    const count = slug => products.filter(p => p.category === slug).length;
+
+    const subscribe = e => {
+        e.preventDefault();
+        if (!/^\S+@\S+\.\S+$/.test(email)) return actions.toast("Introduce un email válido", "danger");
+        setEmail("");
+        actions.toast("¡Listo! Te avisaremos de las mejores ofertas");
+    };
+
+    return (
+        <>
+            {/* HERO */}
+            <section className="hero">
+                <div className="container hero-grid">
+                    <div>
+                        <div><span className="eyebrow"><Sparkles size={14} /> Nueva colección otoño 2026</span></div>
+                        <div>
+                            <h1 className="display-1" style={{ marginTop: 20 }}>
+                                Tecnología que <span className="accent">se siente</span> premium.
+                            </h1>
+                        </div>
+                        <div>
+                            <p className="lead">Smartphones, portátiles, audio y gaming seleccionados por expertos. Envío en 24 h, 2 años de garantía y devoluciones gratis.</p>
+                        </div>
+                        <div className="hero-cta">
+                            <Link to="/catalog" className="btn btn-primary btn-lg">Explorar la tienda <ArrowRight size={18} /></Link>
+                            <Link to="/catalog?sort=discount" className="btn btn-outline btn-lg">Ver ofertas</Link>
+                        </div>
+                        <div className="hero-stats">
+                            <div><strong>50k+</strong><span>clientes felices</span></div>
+                            <div><strong>4,8/5</strong><span>valoración media</span></div>
+                            <div><strong>24 h</strong><span>entrega express</span></div>
+                        </div>
+                    </div>
+                    <div className="hero-visual">
+                        <Link to={`/product/${heroA.id}/${heroA.slug}`} className="hero-tile t1"><ProductArt product={heroA} /></Link>
+                        <Link to={`/product/${heroB.id}/${heroB.slug}`} className="hero-tile t2"><ProductArt product={heroB} /></Link>
+                        <Link to={`/product/${heroC.id}/${heroC.slug}`} className="hero-tile t3"><ProductArt product={heroC} color={heroC.colors[1]?.hex} /></Link>
+                        <div className="hero-floating">
+                            <span className="dot"><BadgeCheck size={20} /></span>
+                            <div>
+                                <strong className="small" style={{ display: "block" }}>{heroA.name}</strong>
+                                <span className="tiny muted">desde {money(heroA.price)}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* MARQUEE */}
+            <div className="marquee" aria-hidden>
+                <div className="marquee-track">
+                    {[0, 1].map(k => (
+                        <div key={k} style={{ display: "flex", gap: 56 }}>
+                            {["Nova", "Kairo", "Lumen", "Aurion", "Volt", "Pulse", "Orbit"].map(b => <span key={b}><Zap size={18} fill="currentColor" strokeWidth={0} />{b}</span>)}
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* CATEGORIES */}
+            <section className="section">
+                <div className="container">
+                    <Reveal className="section-head">
+                        <div>
+                            <span className="eyebrow">Categorías</span>
+                            <h2 className="display-2" style={{ marginTop: 12 }}>Encuentra tu próximo favorito</h2>
+                        </div>
+                        <Link to="/catalog" className="btn btn-outline">Ver todo <ArrowRight size={16} /></Link>
+                    </Reveal>
+                    <div className="cat-grid">
+                        {CATEGORIES.map((c, i) => {
+                            const sample = products.find(p => p.category === c.slug);
+                            return (
+                                <Reveal key={c.slug} delay={i * 60}>
+                                    <Link to={`/catalog?category=${c.slug}`} className="cat-card">
+                                        <div className="art">{sample && <ProductArt product={sample} />}</div>
+                                        <div className="meta">
+                                            <div>
+                                                <h3>{c.name}</h3>
+                                                <span className="tiny muted">{count(c.slug)} productos</span>
+                                            </div>
+                                            <span className="arrow"><ArrowRight size={16} /></span>
+                                        </div>
+                                    </Link>
+                                </Reveal>
+                            );
+                        })}
+                    </div>
+                </div>
+            </section>
+
+            {/* FEATURED */}
+            <section className="section" style={{ paddingTop: 0 }}>
+                <div className="container">
+                    <Reveal className="section-head">
+                        <div>
+                            <span className="eyebrow">Destacados</span>
+                            <h2 className="display-2" style={{ marginTop: 12 }}>Lo más deseado de la temporada</h2>
+                        </div>
+                        <Link to="/catalog?featured=1" className="btn btn-outline">Ver destacados <ArrowRight size={16} /></Link>
+                    </Reveal>
+                    <div className="product-grid">
+                        {featured.map((p, i) => <Reveal key={p.id} delay={(i % 4) * 70}><ProductCard product={p} /></Reveal>)}
+                    </div>
+                </div>
+            </section>
+
+            {/* PROMOS */}
+            {deal && (
+                <section className="section" style={{ paddingTop: 0 }}>
+                    <div className="container promo-grid">
+                        <Reveal className="promo dark">
+                            <div>
+                                <span className="badge badge-accent">Oferta de la semana · -{discountPercent(deal)}%</span>
+                                <h2 className="display-2" style={{ marginTop: 20 }}>{deal.name}</h2>
+                                <p style={{ opacity: .7, marginTop: 12 }}>{deal.short}</p>
+                            </div>
+                            <div style={{ display: "grid", gap: 20 }}>
+                                <div className="countdown" aria-label="Tiempo restante de la oferta">
+                                    <div><strong>{String(t.d).padStart(2, "0")}</strong><span>días</span></div>
+                                    <div><strong>{String(t.h).padStart(2, "0")}</strong><span>horas</span></div>
+                                    <div><strong>{String(t.m).padStart(2, "0")}</strong><span>min</span></div>
+                                    <div><strong>{String(t.s).padStart(2, "0")}</strong><span>seg</span></div>
+                                </div>
+                                <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
+                                    <Link to={`/product/${deal.id}/${deal.slug}`} className="btn btn-accent btn-lg">Comprar por {money(deal.price)}</Link>
+                                    <span style={{ opacity: .6, textDecoration: "line-through" }}>{money(deal.compare_at_price)}</span>
+                                </div>
+                            </div>
+                            <div className="art"><ProductArt product={deal} bare /></div>
+                        </Reveal>
+                        <Reveal delay={100} className="promo accent">
+                            <div>
+                                <span className="badge" style={{ background: "rgba(255,255,255,.2)", color: "#fff" }}>Primer pedido</span>
+                                <h2 className="display-2" style={{ marginTop: 20 }}>10% de descuento</h2>
+                                <p style={{ opacity: .9, marginTop: 12 }}>Usa el código <strong>TECHDROP10</strong> al finalizar tu compra.</p>
+                            </div>
+                            <Link to="/catalog" className="btn btn-light btn-lg" style={{ justifySelf: "start" }}>Empezar a comprar <ArrowUpRight size={18} /></Link>
+                        </Reveal>
+                    </div>
+                </section>
+            )}
+
+            {/* NEW */}
+            {newest.length > 0 && (
+                <section className="section" style={{ paddingTop: 0 }}>
+                    <div className="container">
+                        <Reveal className="section-head">
+                            <div>
+                                <span className="eyebrow">Recién llegados</span>
+                                <h2 className="display-2" style={{ marginTop: 12 }}>Novedades</h2>
+                            </div>
+                            <Link to="/catalog?new=1" className="btn btn-outline">Ver novedades <ArrowRight size={16} /></Link>
+                        </Reveal>
+                        <div className="product-grid">
+                            {newest.map((p, i) => <Reveal key={p.id} delay={i * 70}><ProductCard product={p} /></Reveal>)}
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {/* PERKS */}
+            <section className="section" style={{ paddingTop: 0 }}>
+                <div className="container perks">
+                    {PERKS.map(({ icon: Icon, title, text }, i) => (
+                        <Reveal key={title} delay={i * 70} className="perk">
+                            <span className="ico"><Icon size={22} /></span>
+                            <h3>{title}</h3>
+                            <p className="muted small">{text}</p>
+                        </Reveal>
+                    ))}
+                </div>
+            </section>
+
+            {/* TESTIMONIALS */}
+            <section className="section" style={{ paddingTop: 0 }}>
+                <div className="container">
+                    <Reveal className="section-head">
+                        <div>
+                            <span className="eyebrow">Opiniones</span>
+                            <h2 className="display-2" style={{ marginTop: 12 }}>Lo que dicen nuestros clientes</h2>
+                        </div>
+                        <Stars value={4.8} count="12.400 reseñas" size={18} />
+                    </Reveal>
+                    <div className="testimonials">
+                        {TESTIMONIALS.map((q, i) => (
+                            <Reveal key={q.name} delay={i * 80} className="quote">
+                                <Stars value={5} showNumber={false} size={16} />
+                                <p>“{q.text}”</p>
+                                <div className="who">
+                                    <Avatar name={q.name} />
+                                    <div>
+                                        <strong className="small" style={{ display: "block" }}>{q.name}</strong>
+                                        <span className="tiny muted">{q.role} · Compra verificada</span>
+                                    </div>
+                                </div>
+                            </Reveal>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* NEWSLETTER */}
+            <section className="container">
+                <Reveal className="newsletter">
+                    <div style={{ position: "relative", zIndex: 1 }}>
+                        <h2 className="display-2">Ofertas antes que nadie.</h2>
+                        <p style={{ opacity: .7, marginTop: 12 }}>Suscríbete y recibe lanzamientos, descuentos exclusivos y guías de compra. Sin spam.</p>
+                    </div>
+                    <form onSubmit={subscribe}>
+                        <input type="email" placeholder="tu@email.com" value={email} onChange={e => setEmail(e.target.value)} aria-label="Email" />
+                        <button className="btn btn-accent" type="submit">Suscribirme</button>
+                    </form>
+                </Reveal>
+            </section>
+        </>
+    );
 }
