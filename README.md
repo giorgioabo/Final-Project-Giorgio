@@ -2,7 +2,7 @@
 
 > Tienda online de tecnología full stack con React y Flask. Diseño propio, catálogo propio y una arquitectura que mantiene la web en pie aunque el backend caiga.
 
-🔗 **Demo en vivo:** [cozy-frangipane-33a56e.netlify.app](https://cozy-frangipane-33a56e.netlify.app/)
+🔗 **Demo en vivo:** [techdropproject.netlify.app](https://techdropproject.netlify.app/)
 
 ---
 
