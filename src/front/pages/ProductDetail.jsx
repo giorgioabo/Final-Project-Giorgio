@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Heart, Minus, Plus, Truck, ShieldCheck, RotateCcw, CreditCard, Check, PackageX } from "lucide-react";
+import { Heart, Minus, Plus, Truck, ShieldCheck, RotateCcw, CreditCard, Check, PackageX, ZoomIn, GitCompareArrows } from "lucide-react";
+import { RecentlyViewed } from "../components/Interactive";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import ProductArt from "../components/ProductArt";
 import ProductCard from "../components/ProductCard";
@@ -95,16 +96,29 @@ function Reviews({ product }) {
 
 export default function ProductDetail() {
     const { id } = useParams();
-    const { store, actions } = useGlobalReducer();
+    const { store, dispatch, actions } = useGlobalReducer();
     const product = store.products.find(p => String(p.id) === String(id));
     const [color, setColor] = useState(0);
     const [option, setOption] = useState(0);
     const [qty, setQty] = useState(1);
     const [view, setView] = useState(0);
     const [tab, setTab] = useState("overview");
+    const [zoom, setZoom] = useState(false);
+    const [showSticky, setShowSticky] = useState(false);
+    const buyRef = useRef(null);
 
     usePageTitle(product?.name || "Producto");
     useEffect(() => { setColor(0); setOption(0); setQty(1); setView(0); setTab("overview"); }, [id]);
+    useEffect(() => { if (product) dispatch({ type: "VIEWED", payload: product.id }); }, [product?.id]);
+
+    // Barra de compra fija cuando el botón principal sale de la pantalla.
+    useEffect(() => {
+        const el = buyRef.current;
+        if (!el || !("IntersectionObserver" in window)) return;
+        const io = new IntersectionObserver(([e]) => setShowSticky(!e.isIntersecting && e.boundingClientRect.top < 0));
+        io.observe(el);
+        return () => io.disconnect();
+    }, [product?.id]);
 
     const related = useMemo(() => {
         if (!product) return [];
@@ -142,14 +156,27 @@ export default function ProductDetail() {
             </div>
             <div className="pdp">
                 <div className="gallery">
-                    <div className="main" style={{ position: "relative" }}>
-                        <ProductArt product={product} color={views[view]?.hex} />
+                    <div
+                        className={`main zoom-box ${zoom ? "zooming" : ""}`}
+                        style={{ position: "relative" }}
+                        onMouseEnter={() => product.image && setZoom(true)}
+                        onMouseLeave={() => setZoom(false)}
+                        onMouseMove={e => {
+                            const r = e.currentTarget.getBoundingClientRect();
+                            e.currentTarget.style.setProperty("--zx", `${((e.clientX - r.left) / r.width) * 100}%`);
+                            e.currentTarget.style.setProperty("--zy", `${((e.clientY - r.top) / r.height) * 100}%`);
+                        }}
+                    >
+                        <ProductArt product={product} view={product.image ? view : 0} color={views[view]?.hex} eager />
                         <div style={{ position: "absolute", top: 18, left: 18, display: "flex", gap: 6 }}><ProductBadges product={product} /></div>
+                        {product.image && !zoom && <span className="zoom-hint"><ZoomIn size={14} /> Pasa el ratón para ampliar</span>}
                     </div>
                     <div className="thumbs">
                         {views.map((c, i) => (
                             <button key={i} className={view === i ? "active" : ""} onClick={() => setView(i)} aria-label={`Vista ${i + 1}`}>
-                                <ProductArt product={{ ...product, art: { ...product.art, bg: i % 2 ? [product.art.bg[1], product.art.bg[0]] : product.art.bg } }} color={c.hex} />
+                                {product.image
+                                    ? <ProductArt product={product} view={i} />
+                                    : <ProductArt product={{ ...product, art: { ...product.art, bg: i % 2 ? [product.art.bg[1], product.art.bg[0]] : product.art.bg } }} color={c.hex} />}
                             </button>
                         ))}
                     </div>
@@ -194,7 +221,7 @@ export default function ProductDetail() {
 
                     <StockLine stock={product.stock} />
 
-                    <div className="buy-row">
+                    <div className="buy-row" ref={buyRef}>
                         <div className="qty">
                             <button onClick={() => setQty(q => Math.max(1, q - 1))} disabled={qty <= 1} aria-label="Menos"><Minus size={16} /></button>
                             <span>{qty}</span>
@@ -207,6 +234,11 @@ export default function ProductDetail() {
                             <Heart size={20} fill={saved ? "currentColor" : "none"} />
                         </button>
                     </div>
+
+                    <button className="link-btn" style={{ justifySelf: "start", display: "inline-flex", gap: 6, alignItems: "center", marginTop: -8 }}
+                        onClick={() => dispatch({ type: "TOGGLE_COMPARE", payload: product.id })}>
+                        <GitCompareArrows size={14} /> {store.compare.includes(product.id) ? "Quitar del comparador" : "Añadir al comparador"}
+                    </button>
 
                     {product.stock > 0 && (
                         <p className="small" style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -251,6 +283,21 @@ export default function ProductDetail() {
                 </div>
             </section>
 
+            <section className="section" style={{ paddingBottom: 0 }}>
+                <div className="pdp-extra">
+                    <Bundle product={product} />
+                    <div className="faq">
+                        <h2 className="h3" style={{ fontSize: 26, marginBottom: 8 }}>Preguntas frecuentes</h2>
+                        {FAQ.map(([q, a]) => (
+                            <details key={q}>
+                                <summary>{q} <Plus size={18} /></summary>
+                                <p>{a}</p>
+                            </details>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {related.length > 0 && (
                 <section className="section" style={{ paddingBottom: 0 }}>
                     <div className="section-head">
@@ -262,6 +309,79 @@ export default function ProductDetail() {
                     </div>
                 </section>
             )}
+
+            <RecentlyViewed exclude={product.id} />
+
+            <div className={`sticky-buy ${showSticky ? "show" : ""}`} aria-hidden={!showSticky}>
+                <div className="container">
+                    <div className="thumb"><ProductArt product={product} /></div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                        <strong className="small" style={{ display: "block", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{product.name}</strong>
+                        <span className="tiny muted">{selectedColor.name}{product.options[option] ? ` · ${product.options[option]}` : ""}</span>
+                    </div>
+                    <span className="hide-mobile"><Price product={product} /></span>
+                    <button className="btn btn-accent" disabled={product.stock <= 0} onClick={add} tabIndex={showSticky ? 0 : -1}>
+                        {product.stock > 0 ? "Añadir al carrito" : "Agotado"}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+const FAQ = [
+    ["¿Cuándo recibiré mi pedido?", "Los pedidos realizados antes de las 18:00 salen el mismo día. El envío estándar tarda 24-48 h en península y el express llega al día siguiente antes de las 14:00."],
+    ["¿Puedo devolverlo si no me convence?", "Sí. Tienes 30 días para devolverlo sin dar explicaciones. La recogida es gratuita y te devolvemos el dinero en 3-5 días hábiles."],
+    ["¿Qué cubre la garantía?", "Todos los productos tienen 2 años de garantía oficial frente a defectos de fabricación. Si algo falla, lo reparamos o lo sustituimos sin coste."],
+    ["¿Puedo pagar a plazos?", "Sí, puedes dividir el pago en 3 plazos sin intereses en compras superiores a 100 €."],
+];
+
+// "Cómpralo junto": complementos de otras categorías con selección interactiva.
+const COMPLEMENTS = {
+    smartphones: ["volt-charge-100", "lumen-buds-2"],
+    laptops: ["kairo-glide-mouse", "volt-dock-pro"],
+    audio: ["volt-charge-100", "nova-a5"],
+    gaming: ["volt-pad-pro", "lumen-h9"],
+    wearables: ["lumen-air-open", "volt-charge-100"],
+    accessories: ["kairo-glide-mouse", "kairo-keys-75"],
+};
+
+function Bundle({ product }) {
+    const { store, actions } = useGlobalReducer();
+    const extras = (COMPLEMENTS[product.category] || [])
+        .map(slug => store.products.find(p => p.slug === slug))
+        .filter(p => p && p.id !== product.id && p.stock > 0);
+    const [picked, setPicked] = useState(() => extras.map(p => p.id));
+    useEffect(() => setPicked(extras.map(p => p.id)), [product.id]);
+    if (!extras.length || product.stock <= 0) return <div />;
+    const items = [product, ...extras.filter(p => picked.includes(p.id))];
+    const total = items.reduce((s, p) => s + p.price, 0);
+    return (
+        <div className="bundle">
+            <h2 className="h3" style={{ fontSize: 26 }}>Cómpralo junto</h2>
+            <div className="bundle-items">
+                <div className="bundle-item">
+                    <div className="thumb" style={{ borderColor: "var(--ink)" }}><ProductArt product={product} /></div>
+                    <strong>{product.name}</strong><span className="muted">{money(product.price)}</span>
+                </div>
+                {extras.map(p => {
+                    const on = picked.includes(p.id);
+                    return (
+                        <span key={p.id} style={{ display: "contents" }}>
+                            <span className="bundle-plus">+</span>
+                            <label className={`bundle-item ${on ? "" : "off"}`}>
+                                <input type="checkbox" checked={on} onChange={() => setPicked(ps => on ? ps.filter(x => x !== p.id) : [...ps, p.id])} aria-label={`Incluir ${p.name}`} />
+                                <div className="thumb"><ProductArt product={p} /></div>
+                                <strong>{p.name}</strong><span className="muted">{money(p.price)}</span>
+                            </label>
+                        </span>
+                    );
+                })}
+            </div>
+            <div className="row-between">
+                <span>Total ({items.length} {items.length === 1 ? "producto" : "productos"}): <strong style={{ fontSize: 20 }}>{money(total)}</strong></span>
+                <button className="btn btn-primary" onClick={() => items.forEach(p => actions.addToCart(p))}>Añadir {items.length > 1 ? "los " + items.length : ""} al carrito</button>
+            </div>
         </div>
     );
 }

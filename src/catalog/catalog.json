@@ -1,300 +1,1275 @@
 {
   "categories": [
-    { "id": 1, "slug": "smartphones", "name": "Smartphones", "tagline": "Potencia en tu bolsillo", "art": "phone" },
-    { "id": 2, "slug": "laptops", "name": "Portátiles", "tagline": "Crea sin límites", "art": "laptop" },
-    { "id": 3, "slug": "audio", "name": "Audio", "tagline": "Sonido que te envuelve", "art": "headphones" },
-    { "id": 4, "slug": "gaming", "name": "Gaming", "tagline": "Juega a otro nivel", "art": "controller" },
-    { "id": 5, "slug": "wearables", "name": "Wearables", "tagline": "Tu salud, en tiempo real", "art": "watch" },
-    { "id": 6, "slug": "accessories", "name": "Accesorios", "tagline": "El detalle que lo cambia todo", "art": "keyboard" }
+    {
+      "id": 1,
+      "slug": "smartphones",
+      "name": "Smartphones",
+      "tagline": "Potencia en tu bolsillo",
+      "art": "phone"
+    },
+    {
+      "id": 2,
+      "slug": "laptops",
+      "name": "Portátiles",
+      "tagline": "Crea sin límites",
+      "art": "laptop"
+    },
+    {
+      "id": 3,
+      "slug": "audio",
+      "name": "Audio",
+      "tagline": "Sonido que te envuelve",
+      "art": "headphones"
+    },
+    {
+      "id": 4,
+      "slug": "gaming",
+      "name": "Gaming",
+      "tagline": "Juega a otro nivel",
+      "art": "controller"
+    },
+    {
+      "id": 5,
+      "slug": "wearables",
+      "name": "Wearables",
+      "tagline": "Tu salud, en tiempo real",
+      "art": "watch"
+    },
+    {
+      "id": 6,
+      "slug": "accessories",
+      "name": "Accesorios",
+      "tagline": "El detalle que lo cambia todo",
+      "art": "keyboard"
+    }
   ],
   "products": [
     {
-      "id": 1, "slug": "nova-x1-pro", "name": "Nova X1 Pro", "brand": "Nova", "category": "smartphones",
-      "price": 1099, "compare_at_price": 1249, "stock": 24, "rating": 4.8, "reviews_count": 312,
-      "badge": "Más vendido", "is_featured": true, "is_new": false,
+      "id": 1,
+      "slug": "nova-x1-pro",
+      "name": "Nova X1 Pro",
+      "brand": "Nova",
+      "category": "smartphones",
+      "price": 1099,
+      "compare_at_price": 1249,
+      "stock": 24,
+      "rating": 4.8,
+      "reviews_count": 312,
+      "badge": "Más vendido",
+      "is_featured": true,
+      "is_new": false,
       "short": "Pantalla LTPO de 6,7\", triple cámara de 50 MP y chasis de titanio.",
       "description": "El Nova X1 Pro lleva la fotografía móvil a otro nivel con su sistema de triple cámara de 50 MP y un sensor principal de 1 pulgada. Su pantalla LTPO de 120 Hz se adapta a lo que ves para ahorrar batería, y el chasis de titanio aeroespacial lo hace ligero y extremadamente resistente.",
-      "features": ["Chasis de titanio de grado 5", "Triple cámara 50 MP con zoom óptico 5x", "Batería de 5.000 mAh con carga de 80 W", "IP68 contra agua y polvo"],
-      "specs": { "Pantalla": "6,7\" LTPO OLED, 120 Hz, 2.800 nits", "Procesador": "Nova Q3 de 3 nm", "Memoria": "12 GB RAM", "Almacenamiento": "256 GB / 512 GB / 1 TB", "Cámaras": "50 MP + 50 MP UGA + 50 MP 5x", "Batería": "5.000 mAh, 80 W", "Peso": "199 g" },
-      "colors": [ { "name": "Titanio grafito", "hex": "#2b2d31" }, { "name": "Titanio arena", "hex": "#cbb89d" }, { "name": "Azul glaciar", "hex": "#9fb7c9" } ],
-      "options": ["256 GB", "512 GB", "1 TB"],
-      "art": { "kind": "phone", "bg": ["#f1ece4", "#e2d6c4"] }
+      "features": [
+        "Chasis de titanio de grado 5",
+        "Triple cámara 50 MP con zoom óptico 5x",
+        "Batería de 5.000 mAh con carga de 80 W",
+        "IP68 contra agua y polvo"
+      ],
+      "specs": {
+        "Pantalla": "6,7\" LTPO OLED, 120 Hz, 2.800 nits",
+        "Procesador": "Nova Q3 de 3 nm",
+        "Memoria": "12 GB RAM",
+        "Almacenamiento": "256 GB / 512 GB / 1 TB",
+        "Cámaras": "50 MP + 50 MP UGA + 50 MP 5x",
+        "Batería": "5.000 mAh, 80 W",
+        "Peso": "199 g"
+      },
+      "colors": [
+        {
+          "name": "Titanio grafito",
+          "hex": "#2b2d31"
+        },
+        {
+          "name": "Titanio arena",
+          "hex": "#cbb89d"
+        },
+        {
+          "name": "Azul glaciar",
+          "hex": "#9fb7c9"
+        }
+      ],
+      "options": [
+        "256 GB",
+        "512 GB",
+        "1 TB"
+      ],
+      "art": {
+        "kind": "phone",
+        "bg": [
+          "#f1ece4",
+          "#e2d6c4"
+        ]
+      },
+      "image": "/products/nova-x1-pro.webp"
     },
     {
-      "id": 2, "slug": "nova-a5", "name": "Nova A5", "brand": "Nova", "category": "smartphones",
-      "price": 449, "compare_at_price": null, "stock": 58, "rating": 4.5, "reviews_count": 186,
-      "badge": null, "is_featured": false, "is_new": true,
+      "id": 2,
+      "slug": "nova-a5",
+      "name": "Nova A5",
+      "brand": "Nova",
+      "category": "smartphones",
+      "price": 449,
+      "compare_at_price": null,
+      "stock": 58,
+      "rating": 4.5,
+      "reviews_count": 186,
+      "badge": null,
+      "is_featured": false,
+      "is_new": true,
       "short": "Lo esencial, bien hecho. OLED 120 Hz y dos días de batería.",
       "description": "El Nova A5 demuestra que un móvil asequible no tiene por qué renunciar a nada importante: pantalla OLED fluida, una cámara principal que brilla de noche y una batería que llega con margen al segundo día.",
-      "features": ["OLED 120 Hz de 6,4\"", "Cámara de 50 MP con modo noche", "Hasta 2 días de batería", "5 años de actualizaciones"],
-      "specs": { "Pantalla": "6,4\" OLED, 120 Hz", "Procesador": "Nova Q1", "Memoria": "8 GB RAM", "Almacenamiento": "128 GB / 256 GB", "Cámaras": "50 MP + 12 MP UGA", "Batería": "5.000 mAh, 33 W", "Peso": "182 g" },
-      "colors": [ { "name": "Menta", "hex": "#b8dccb" }, { "name": "Medianoche", "hex": "#23263a" }, { "name": "Coral", "hex": "#f29a85" } ],
-      "options": ["128 GB", "256 GB"],
-      "art": { "kind": "phone", "bg": ["#e6f3ec", "#cfe7da"] }
+      "features": [
+        "OLED 120 Hz de 6,4\"",
+        "Cámara de 50 MP con modo noche",
+        "Hasta 2 días de batería",
+        "5 años de actualizaciones"
+      ],
+      "specs": {
+        "Pantalla": "6,4\" OLED, 120 Hz",
+        "Procesador": "Nova Q1",
+        "Memoria": "8 GB RAM",
+        "Almacenamiento": "128 GB / 256 GB",
+        "Cámaras": "50 MP + 12 MP UGA",
+        "Batería": "5.000 mAh, 33 W",
+        "Peso": "182 g"
+      },
+      "colors": [
+        {
+          "name": "Menta",
+          "hex": "#b8dccb"
+        },
+        {
+          "name": "Medianoche",
+          "hex": "#23263a"
+        },
+        {
+          "name": "Coral",
+          "hex": "#f29a85"
+        }
+      ],
+      "options": [
+        "128 GB",
+        "256 GB"
+      ],
+      "art": {
+        "kind": "phone",
+        "bg": [
+          "#e6f3ec",
+          "#cfe7da"
+        ]
+      },
+      "image": "/products/nova-a5.webp"
     },
     {
-      "id": 3, "slug": "aurion-fold", "name": "Aurion Fold", "brand": "Aurion", "category": "smartphones",
-      "price": 1799, "compare_at_price": null, "stock": 9, "rating": 4.7, "reviews_count": 74,
-      "badge": "Nuevo", "is_featured": true, "is_new": true,
+      "id": 3,
+      "slug": "aurion-fold",
+      "name": "Aurion Fold",
+      "brand": "Aurion",
+      "category": "smartphones",
+      "price": 1799,
+      "compare_at_price": null,
+      "stock": 9,
+      "rating": 4.7,
+      "reviews_count": 74,
+      "badge": "Nuevo",
+      "is_featured": true,
+      "is_new": true,
       "short": "Un móvil que se convierte en tablet de 7,8\". Bisagra sin pliegue visible.",
       "description": "Aurion Fold despliega una pantalla interior de 7,8\" sin pliegue apreciable gracias a su bisagra de gota. Multitarea real con tres apps a la vez, y cerrado es tan cómodo como cualquier smartphone.",
-      "features": ["Pantalla interior de 7,8\" sin pliegue", "Bisagra de gota certificada para 400.000 pliegues", "Multitarea con 3 ventanas", "Lápiz Aurion Pen compatible"],
-      "specs": { "Pantalla interior": "7,8\" LTPO OLED, 120 Hz", "Pantalla exterior": "6,3\" OLED, 120 Hz", "Procesador": "Aurion Edge 2", "Memoria": "16 GB RAM", "Almacenamiento": "512 GB / 1 TB", "Batería": "4.800 mAh, 66 W", "Peso": "239 g" },
-      "colors": [ { "name": "Negro ónix", "hex": "#1b1c1f" }, { "name": "Verde salvia", "hex": "#8fa596" } ],
-      "options": ["512 GB", "1 TB"],
-      "art": { "kind": "tablet", "bg": ["#e9ecef", "#d3d9df"] }
+      "features": [
+        "Pantalla interior de 7,8\" sin pliegue",
+        "Bisagra de gota certificada para 400.000 pliegues",
+        "Multitarea con 3 ventanas",
+        "Lápiz Aurion Pen compatible"
+      ],
+      "specs": {
+        "Pantalla interior": "7,8\" LTPO OLED, 120 Hz",
+        "Pantalla exterior": "6,3\" OLED, 120 Hz",
+        "Procesador": "Aurion Edge 2",
+        "Memoria": "16 GB RAM",
+        "Almacenamiento": "512 GB / 1 TB",
+        "Batería": "4.800 mAh, 66 W",
+        "Peso": "239 g"
+      },
+      "colors": [
+        {
+          "name": "Negro ónix",
+          "hex": "#1b1c1f"
+        },
+        {
+          "name": "Verde salvia",
+          "hex": "#8fa596"
+        }
+      ],
+      "options": [
+        "512 GB",
+        "1 TB"
+      ],
+      "art": {
+        "kind": "tablet",
+        "bg": [
+          "#e9ecef",
+          "#d3d9df"
+        ]
+      },
+      "image": "/products/aurion-fold.webp"
     },
     {
-      "id": 4, "slug": "kairo-book-14", "name": "Kairo Book 14", "brand": "Kairo", "category": "laptops",
-      "price": 1499, "compare_at_price": 1699, "stock": 15, "rating": 4.9, "reviews_count": 241,
-      "badge": "-12%", "is_featured": true, "is_new": false,
+      "id": 4,
+      "slug": "kairo-book-14",
+      "name": "Kairo Book 14",
+      "brand": "Kairo",
+      "category": "laptops",
+      "price": 1499,
+      "compare_at_price": 1699,
+      "stock": 15,
+      "rating": 4.9,
+      "reviews_count": 241,
+      "badge": "-12%",
+      "is_featured": true,
+      "is_new": false,
       "short": "Ultraligero de 1,2 kg con 20 horas de batería y pantalla OLED 3K.",
       "description": "El Kairo Book 14 cabe en cualquier mochila y aguanta una jornada completa y media. Su pantalla OLED 3K con calibración de fábrica lo convierte en la herramienta ideal para creativos que se mueven.",
-      "features": ["Solo 1,2 kg y 13 mm de grosor", "Hasta 20 h de batería", "OLED 3K calibrada (ΔE < 1)", "Teclado retroiluminado silencioso"],
-      "specs": { "Pantalla": "14\" OLED 3K, 120 Hz", "Procesador": "Kairo K9, 12 núcleos", "Memoria": "16 GB / 32 GB", "Almacenamiento": "1 TB SSD NVMe", "Gráficos": "Integrados Kairo Vision", "Batería": "75 Wh, hasta 20 h", "Peso": "1,2 kg" },
-      "colors": [ { "name": "Plata", "hex": "#c9ccd1" }, { "name": "Gris espacial", "hex": "#5b5e66" } ],
-      "options": ["16 GB RAM", "32 GB RAM"],
-      "art": { "kind": "laptop", "bg": ["#eceef2", "#d8dce4"] }
+      "features": [
+        "Solo 1,2 kg y 13 mm de grosor",
+        "Hasta 20 h de batería",
+        "OLED 3K calibrada (ΔE < 1)",
+        "Teclado retroiluminado silencioso"
+      ],
+      "specs": {
+        "Pantalla": "14\" OLED 3K, 120 Hz",
+        "Procesador": "Kairo K9, 12 núcleos",
+        "Memoria": "16 GB / 32 GB",
+        "Almacenamiento": "1 TB SSD NVMe",
+        "Gráficos": "Integrados Kairo Vision",
+        "Batería": "75 Wh, hasta 20 h",
+        "Peso": "1,2 kg"
+      },
+      "colors": [
+        {
+          "name": "Plata",
+          "hex": "#c9ccd1"
+        },
+        {
+          "name": "Gris espacial",
+          "hex": "#5b5e66"
+        }
+      ],
+      "options": [
+        "16 GB RAM",
+        "32 GB RAM"
+      ],
+      "art": {
+        "kind": "laptop",
+        "bg": [
+          "#eceef2",
+          "#d8dce4"
+        ]
+      },
+      "image": "/products/kairo-book-14.webp"
     },
     {
-      "id": 5, "slug": "kairo-studio-16", "name": "Kairo Studio 16", "brand": "Kairo", "category": "laptops",
-      "price": 2699, "compare_at_price": null, "stock": 6, "rating": 4.8, "reviews_count": 97,
-      "badge": "Pro", "is_featured": true, "is_new": true,
+      "id": 5,
+      "slug": "kairo-studio-16",
+      "name": "Kairo Studio 16",
+      "brand": "Kairo",
+      "category": "laptops",
+      "price": 2699,
+      "compare_at_price": null,
+      "stock": 6,
+      "rating": 4.8,
+      "reviews_count": 97,
+      "badge": "Pro",
+      "is_featured": true,
+      "is_new": true,
       "short": "Estación de trabajo portátil: 64 GB de RAM y gráfica dedicada de 12 GB.",
       "description": "Diseñado para edición de vídeo 8K, 3D y desarrollo exigente. El Kairo Studio 16 combina una pantalla Mini-LED de 1.600 nits con una refrigeración de cámara de vapor que lo mantiene silencioso bajo carga.",
-      "features": ["Pantalla Mini-LED de 1.600 nits", "Hasta 64 GB de RAM", "Gráfica dedicada de 12 GB", "Refrigeración por cámara de vapor"],
-      "specs": { "Pantalla": "16\" Mini-LED 3,5K, 165 Hz", "Procesador": "Kairo K9 Max, 16 núcleos", "Memoria": "32 GB / 64 GB", "Almacenamiento": "2 TB SSD NVMe", "Gráficos": "12 GB GDDR7", "Batería": "99 Wh", "Peso": "2,1 kg" },
-      "colors": [ { "name": "Negro carbón", "hex": "#26282c" } ],
-      "options": ["32 GB RAM", "64 GB RAM"],
-      "art": { "kind": "laptop", "bg": ["#e4e2f2", "#cdc8ea"] }
+      "features": [
+        "Pantalla Mini-LED de 1.600 nits",
+        "Hasta 64 GB de RAM",
+        "Gráfica dedicada de 12 GB",
+        "Refrigeración por cámara de vapor"
+      ],
+      "specs": {
+        "Pantalla": "16\" Mini-LED 3,5K, 165 Hz",
+        "Procesador": "Kairo K9 Max, 16 núcleos",
+        "Memoria": "32 GB / 64 GB",
+        "Almacenamiento": "2 TB SSD NVMe",
+        "Gráficos": "12 GB GDDR7",
+        "Batería": "99 Wh",
+        "Peso": "2,1 kg"
+      },
+      "colors": [
+        {
+          "name": "Negro carbón",
+          "hex": "#26282c"
+        }
+      ],
+      "options": [
+        "32 GB RAM",
+        "64 GB RAM"
+      ],
+      "art": {
+        "kind": "laptop",
+        "bg": [
+          "#e4e2f2",
+          "#cdc8ea"
+        ]
+      },
+      "image": "/products/kairo-studio-16.webp"
     },
     {
-      "id": 6, "slug": "volt-blade-15", "name": "Volt Blade 15", "brand": "Volt", "category": "laptops",
-      "price": 1899, "compare_at_price": 2099, "stock": 11, "rating": 4.6, "reviews_count": 158,
-      "badge": "-10%", "is_featured": false, "is_new": false,
+      "id": 6,
+      "slug": "volt-blade-15",
+      "name": "Volt Blade 15",
+      "brand": "Volt",
+      "category": "laptops",
+      "price": 1899,
+      "compare_at_price": 2099,
+      "stock": 11,
+      "rating": 4.6,
+      "reviews_count": 158,
+      "badge": "-10%",
+      "is_featured": false,
+      "is_new": false,
       "short": "Portátil gaming de 240 Hz con RGB por tecla y chasis de aluminio.",
       "description": "El Volt Blade 15 lleva los fps al máximo con su pantalla QHD de 240 Hz y una gráfica de última generación, todo en un chasis de aluminio CNC sorprendentemente compacto.",
-      "features": ["QHD 240 Hz con 3 ms", "Teclado RGB por tecla", "Chasis de aluminio CNC", "Wi-Fi 7"],
-      "specs": { "Pantalla": "15,6\" QHD IPS, 240 Hz", "Procesador": "Volt Core 9 HX", "Memoria": "32 GB DDR5", "Almacenamiento": "1 TB SSD", "Gráficos": "8 GB GDDR7", "Batería": "90 Wh", "Peso": "2,0 kg" },
-      "colors": [ { "name": "Negro mate", "hex": "#1e1f22" } ],
-      "options": ["1 TB", "2 TB"],
-      "art": { "kind": "laptop", "bg": ["#e3f0ea", "#c4e1d3"] }
+      "features": [
+        "QHD 240 Hz con 3 ms",
+        "Teclado RGB por tecla",
+        "Chasis de aluminio CNC",
+        "Wi-Fi 7"
+      ],
+      "specs": {
+        "Pantalla": "15,6\" QHD IPS, 240 Hz",
+        "Procesador": "Volt Core 9 HX",
+        "Memoria": "32 GB DDR5",
+        "Almacenamiento": "1 TB SSD",
+        "Gráficos": "8 GB GDDR7",
+        "Batería": "90 Wh",
+        "Peso": "2,0 kg"
+      },
+      "colors": [
+        {
+          "name": "Negro mate",
+          "hex": "#1e1f22"
+        }
+      ],
+      "options": [
+        "1 TB",
+        "2 TB"
+      ],
+      "art": {
+        "kind": "laptop",
+        "bg": [
+          "#e3f0ea",
+          "#c4e1d3"
+        ]
+      },
+      "image": "/products/volt-blade-15.webp"
     },
     {
-      "id": 7, "slug": "lumen-h9", "name": "Lumen H9", "brand": "Lumen", "category": "audio",
-      "price": 379, "compare_at_price": 429, "stock": 33, "rating": 4.9, "reviews_count": 528,
-      "badge": "Más vendido", "is_featured": true, "is_new": false,
+      "id": 7,
+      "slug": "lumen-h9",
+      "name": "Lumen H9",
+      "brand": "Lumen",
+      "category": "audio",
+      "price": 379,
+      "compare_at_price": 429,
+      "stock": 33,
+      "rating": 4.9,
+      "reviews_count": 528,
+      "badge": "Más vendido",
+      "is_featured": true,
+      "is_new": false,
       "short": "Cancelación de ruido adaptativa líder y 40 horas de autonomía.",
       "description": "Los Lumen H9 analizan el ruido a tu alrededor 50.000 veces por segundo para borrarlo. Almohadillas de espuma viscoelástica, audio espacial con seguimiento de cabeza y 40 horas de música con una carga.",
-      "features": ["Cancelación de ruido adaptativa", "40 h de autonomía, 5 min = 4 h", "Audio espacial con seguimiento de cabeza", "Multipunto: 2 dispositivos a la vez"],
-      "specs": { "Drivers": "40 mm de fibra de carbono", "Cancelación de ruido": "Adaptativa, 8 micrófonos", "Autonomía": "40 h (ANC activado)", "Conectividad": "Bluetooth 5.4, USB-C audio", "Códecs": "AAC, LDAC, LC3", "Peso": "254 g" },
-      "colors": [ { "name": "Arena", "hex": "#d9cbb5" }, { "name": "Negro", "hex": "#222327" }, { "name": "Azul niebla", "hex": "#8fa3b8" } ],
+      "features": [
+        "Cancelación de ruido adaptativa",
+        "40 h de autonomía, 5 min = 4 h",
+        "Audio espacial con seguimiento de cabeza",
+        "Multipunto: 2 dispositivos a la vez"
+      ],
+      "specs": {
+        "Drivers": "40 mm de fibra de carbono",
+        "Cancelación de ruido": "Adaptativa, 8 micrófonos",
+        "Autonomía": "40 h (ANC activado)",
+        "Conectividad": "Bluetooth 5.4, USB-C audio",
+        "Códecs": "AAC, LDAC, LC3",
+        "Peso": "254 g"
+      },
+      "colors": [
+        {
+          "name": "Arena",
+          "hex": "#d9cbb5"
+        },
+        {
+          "name": "Negro",
+          "hex": "#222327"
+        },
+        {
+          "name": "Azul niebla",
+          "hex": "#8fa3b8"
+        }
+      ],
       "options": [],
-      "art": { "kind": "headphones", "bg": ["#f3ece2", "#e6d8c4"] }
+      "art": {
+        "kind": "headphones",
+        "bg": [
+          "#f3ece2",
+          "#e6d8c4"
+        ]
+      },
+      "image": "/products/lumen-h9.webp"
     },
     {
-      "id": 8, "slug": "lumen-buds-2", "name": "Lumen Buds 2", "brand": "Lumen", "category": "audio",
-      "price": 199, "compare_at_price": null, "stock": 72, "rating": 4.6, "reviews_count": 402,
-      "badge": null, "is_featured": true, "is_new": true,
+      "id": 8,
+      "slug": "lumen-buds-2",
+      "name": "Lumen Buds 2",
+      "brand": "Lumen",
+      "category": "audio",
+      "price": 199,
+      "compare_at_price": null,
+      "stock": 72,
+      "rating": 4.6,
+      "reviews_count": 402,
+      "badge": null,
+      "is_featured": true,
+      "is_new": true,
       "short": "Auriculares in-ear con ANC, ajuste perfecto y estuche con carga inalámbrica.",
       "description": "Pequeños, ligeros y potentes. Los Lumen Buds 2 ofrecen cancelación activa de ruido, modo ambiente natural y un ajuste que no se mueve ni corriendo.",
-      "features": ["Cancelación activa de ruido", "Modo ambiente natural", "IPX5 resistentes al sudor", "Estuche con carga inalámbrica"],
-      "specs": { "Drivers": "11 mm dinámicos", "Autonomía": "8 h + 30 h con estuche", "Conectividad": "Bluetooth 5.4", "Resistencia": "IPX5", "Peso": "4,9 g por auricular" },
-      "colors": [ { "name": "Blanco", "hex": "#f2f2f0" }, { "name": "Negro", "hex": "#26272b" } ],
+      "features": [
+        "Cancelación activa de ruido",
+        "Modo ambiente natural",
+        "IPX5 resistentes al sudor",
+        "Estuche con carga inalámbrica"
+      ],
+      "specs": {
+        "Drivers": "11 mm dinámicos",
+        "Autonomía": "8 h + 30 h con estuche",
+        "Conectividad": "Bluetooth 5.4",
+        "Resistencia": "IPX5",
+        "Peso": "4,9 g por auricular"
+      },
+      "colors": [
+        {
+          "name": "Blanco",
+          "hex": "#f2f2f0"
+        },
+        {
+          "name": "Negro",
+          "hex": "#26272b"
+        }
+      ],
       "options": [],
-      "art": { "kind": "earbuds", "bg": ["#eef0f3", "#dde1e8"] }
+      "art": {
+        "kind": "earbuds",
+        "bg": [
+          "#eef0f3",
+          "#dde1e8"
+        ]
+      },
+      "image": "/products/lumen-buds-2.webp"
     },
     {
-      "id": 9, "slug": "pulse-boom-mini", "name": "Pulse Boom Mini", "brand": "Pulse", "category": "audio",
-      "price": 129, "compare_at_price": 159, "stock": 0, "rating": 4.4, "reviews_count": 213,
-      "badge": "Agotado", "is_featured": false, "is_new": false,
+      "id": 9,
+      "slug": "pulse-boom-mini",
+      "name": "Pulse Boom Mini",
+      "brand": "Pulse",
+      "category": "audio",
+      "price": 129,
+      "compare_at_price": 159,
+      "stock": 0,
+      "rating": 4.4,
+      "reviews_count": 213,
+      "badge": "Agotado",
+      "is_featured": false,
+      "is_new": false,
       "short": "Altavoz portátil resistente al agua con graves sorprendentes.",
       "description": "Del parque a la ducha. El Pulse Boom Mini suena enorme para su tamaño, flota en el agua y aguanta 18 horas de fiesta.",
-      "features": ["Sonido 360°", "IP67: sumergible y flota", "18 h de autonomía", "Empareja dos para estéreo"],
-      "specs": { "Potencia": "20 W", "Autonomía": "18 h", "Resistencia": "IP67", "Conectividad": "Bluetooth 5.3", "Peso": "540 g" },
-      "colors": [ { "name": "Naranja", "hex": "#ff7a3d" }, { "name": "Azul", "hex": "#4a6cf7" }, { "name": "Grafito", "hex": "#3a3c42" } ],
+      "features": [
+        "Sonido 360°",
+        "IP67: sumergible y flota",
+        "18 h de autonomía",
+        "Empareja dos para estéreo"
+      ],
+      "specs": {
+        "Potencia": "20 W",
+        "Autonomía": "18 h",
+        "Resistencia": "IP67",
+        "Conectividad": "Bluetooth 5.3",
+        "Peso": "540 g"
+      },
+      "colors": [
+        {
+          "name": "Naranja",
+          "hex": "#ff7a3d"
+        },
+        {
+          "name": "Azul",
+          "hex": "#4a6cf7"
+        },
+        {
+          "name": "Grafito",
+          "hex": "#3a3c42"
+        }
+      ],
       "options": [],
-      "art": { "kind": "speaker", "bg": ["#fdeee4", "#fbd8c3"] }
+      "art": {
+        "kind": "speaker",
+        "bg": [
+          "#fdeee4",
+          "#fbd8c3"
+        ]
+      },
+      "image": "/products/pulse-boom-mini.webp"
     },
     {
-      "id": 10, "slug": "pulse-studio-one", "name": "Pulse Studio One", "brand": "Pulse", "category": "audio",
-      "price": 549, "compare_at_price": null, "stock": 14, "rating": 4.7, "reviews_count": 66,
-      "badge": "Nuevo", "is_featured": false, "is_new": true,
+      "id": 10,
+      "slug": "pulse-studio-one",
+      "name": "Pulse Studio One",
+      "brand": "Pulse",
+      "category": "audio",
+      "price": 549,
+      "compare_at_price": null,
+      "stock": 14,
+      "rating": 4.7,
+      "reviews_count": 66,
+      "badge": "Nuevo",
+      "is_featured": false,
+      "is_new": true,
       "short": "Altavoz inteligente Hi-Fi con calibración automática de sala.",
       "description": "Pulse Studio One escucha tu habitación y ajusta su ecualización para sonar perfecto donde lo pongas. Woofer de 6,5\" y tweeters de seda para un sonido de estudio en casa.",
-      "features": ["Calibración automática de sala", "Woofer de 6,5\"", "Wi-Fi, AirPlay y Bluetooth", "Agrupable en multiroom"],
-      "specs": { "Potencia": "150 W", "Drivers": "1 woofer 6,5\" + 2 tweeters", "Conectividad": "Wi-Fi 6, Bluetooth 5.3, HDMI eARC", "Dimensiones": "32 × 18 × 18 cm", "Peso": "4,2 kg" },
-      "colors": [ { "name": "Tiza", "hex": "#e7e4de" }, { "name": "Carbón", "hex": "#2d2e33" } ],
+      "features": [
+        "Calibración automática de sala",
+        "Woofer de 6,5\"",
+        "Wi-Fi, AirPlay y Bluetooth",
+        "Agrupable en multiroom"
+      ],
+      "specs": {
+        "Potencia": "150 W",
+        "Drivers": "1 woofer 6,5\" + 2 tweeters",
+        "Conectividad": "Wi-Fi 6, Bluetooth 5.3, HDMI eARC",
+        "Dimensiones": "32 × 18 × 18 cm",
+        "Peso": "4,2 kg"
+      },
+      "colors": [
+        {
+          "name": "Tiza",
+          "hex": "#e7e4de"
+        },
+        {
+          "name": "Carbón",
+          "hex": "#2d2e33"
+        }
+      ],
       "options": [],
-      "art": { "kind": "speaker", "bg": ["#eceae6", "#d9d5ce"] }
+      "art": {
+        "kind": "speaker",
+        "bg": [
+          "#eceae6",
+          "#d9d5ce"
+        ]
+      },
+      "image": "/products/pulse-studio-one.webp"
     },
     {
-      "id": 11, "slug": "volt-pad-pro", "name": "Volt Pad Pro", "brand": "Volt", "category": "gaming",
-      "price": 89, "compare_at_price": 109, "stock": 64, "rating": 4.7, "reviews_count": 389,
-      "badge": "-18%", "is_featured": true, "is_new": false,
+      "id": 11,
+      "slug": "volt-pad-pro",
+      "name": "Volt Pad Pro",
+      "brand": "Volt",
+      "category": "gaming",
+      "price": 89,
+      "compare_at_price": 109,
+      "stock": 64,
+      "rating": 4.7,
+      "reviews_count": 389,
+      "badge": "-18%",
+      "is_featured": true,
+      "is_new": false,
       "short": "Mando pro con joysticks de efecto Hall y gatillos regulables.",
       "description": "Sin drift, nunca. Los joysticks de efecto Hall del Volt Pad Pro son magnéticos y no se desgastan. Gatillos con tope regulable, cuatro palancas traseras y 40 horas de batería.",
-      "features": ["Joysticks Hall sin drift", "Gatillos con tope regulable", "4 palancas traseras programables", "40 h de batería"],
-      "specs": { "Conectividad": "2,4 GHz, Bluetooth, USB-C", "Compatibilidad": "PC, consola, móvil", "Batería": "40 h", "Latencia": "< 1 ms (2,4 GHz)", "Peso": "248 g" },
-      "colors": [ { "name": "Blanco hielo", "hex": "#eceef1" }, { "name": "Negro", "hex": "#24252a" }, { "name": "Volt", "hex": "#c6f432" } ],
+      "features": [
+        "Joysticks Hall sin drift",
+        "Gatillos con tope regulable",
+        "4 palancas traseras programables",
+        "40 h de batería"
+      ],
+      "specs": {
+        "Conectividad": "2,4 GHz, Bluetooth, USB-C",
+        "Compatibilidad": "PC, consola, móvil",
+        "Batería": "40 h",
+        "Latencia": "< 1 ms (2,4 GHz)",
+        "Peso": "248 g"
+      },
+      "colors": [
+        {
+          "name": "Blanco hielo",
+          "hex": "#eceef1"
+        },
+        {
+          "name": "Negro",
+          "hex": "#24252a"
+        },
+        {
+          "name": "Volt",
+          "hex": "#c6f432"
+        }
+      ],
       "options": [],
-      "art": { "kind": "controller", "bg": ["#eef4dc", "#dceab4"] }
+      "art": {
+        "kind": "controller",
+        "bg": [
+          "#eef4dc",
+          "#dceab4"
+        ]
+      },
+      "image": "/products/volt-pad-pro.webp"
     },
     {
-      "id": 12, "slug": "orbit-go", "name": "Orbit Go", "brand": "Orbit", "category": "gaming",
-      "price": 599, "compare_at_price": null, "stock": 8, "rating": 4.8, "reviews_count": 145,
-      "badge": "Nuevo", "is_featured": true, "is_new": true,
+      "id": 12,
+      "slug": "orbit-go",
+      "name": "Orbit Go",
+      "brand": "Orbit",
+      "category": "gaming",
+      "price": 599,
+      "compare_at_price": null,
+      "stock": 8,
+      "rating": 4.8,
+      "reviews_count": 145,
+      "badge": "Nuevo",
+      "is_featured": true,
+      "is_new": true,
       "short": "Consola portátil para PC: tu biblioteca de juegos, en cualquier lugar.",
       "description": "Orbit Go ejecuta tus juegos de PC a 60 fps en una pantalla OLED de 7,4\". Mandos integrados, trackpads de precisión y modo dock para jugar en la tele.",
-      "features": ["OLED 7,4\" HDR, 90 Hz", "Ejecuta juegos de PC nativos", "Trackpads hápticos", "Modo dock 4K"],
-      "specs": { "Pantalla": "7,4\" OLED HDR, 90 Hz", "Procesador": "Orbit APU de 8 núcleos", "Memoria": "16 GB LPDDR5X", "Almacenamiento": "512 GB / 1 TB", "Batería": "50 Wh", "Peso": "640 g" },
-      "colors": [ { "name": "Negro cósmico", "hex": "#25262b" }, { "name": "Blanco lunar", "hex": "#e9eaee" } ],
-      "options": ["512 GB", "1 TB"],
-      "art": { "kind": "handheld", "bg": ["#e7e5f6", "#cfcaf0"] }
+      "features": [
+        "OLED 7,4\" HDR, 90 Hz",
+        "Ejecuta juegos de PC nativos",
+        "Trackpads hápticos",
+        "Modo dock 4K"
+      ],
+      "specs": {
+        "Pantalla": "7,4\" OLED HDR, 90 Hz",
+        "Procesador": "Orbit APU de 8 núcleos",
+        "Memoria": "16 GB LPDDR5X",
+        "Almacenamiento": "512 GB / 1 TB",
+        "Batería": "50 Wh",
+        "Peso": "640 g"
+      },
+      "colors": [
+        {
+          "name": "Negro cósmico",
+          "hex": "#25262b"
+        },
+        {
+          "name": "Blanco lunar",
+          "hex": "#e9eaee"
+        }
+      ],
+      "options": [
+        "512 GB",
+        "1 TB"
+      ],
+      "art": {
+        "kind": "handheld",
+        "bg": [
+          "#e7e5f6",
+          "#cfcaf0"
+        ]
+      },
+      "image": "/products/orbit-go.webp"
     },
     {
-      "id": 13, "slug": "volt-arena-27", "name": "Volt Arena 27", "brand": "Volt", "category": "gaming",
-      "price": 649, "compare_at_price": 749, "stock": 12, "rating": 4.7, "reviews_count": 121,
-      "badge": "-13%", "is_featured": false, "is_new": false,
+      "id": 13,
+      "slug": "volt-arena-27",
+      "name": "Volt Arena 27",
+      "brand": "Volt",
+      "category": "gaming",
+      "price": 649,
+      "compare_at_price": 749,
+      "stock": 12,
+      "rating": 4.7,
+      "reviews_count": 121,
+      "badge": "-13%",
+      "is_featured": false,
+      "is_new": false,
       "short": "Monitor QD-OLED de 27\" a 360 Hz para competir sin compromisos.",
       "description": "Negros perfectos, colores explosivos y un tiempo de respuesta de 0,03 ms. El Volt Arena 27 es el monitor que usan los profesionales de los esports.",
-      "features": ["QD-OLED 27\" QHD", "360 Hz y 0,03 ms", "HDR True Black 400", "Base ergonómica con giro y altura"],
-      "specs": { "Panel": "27\" QD-OLED, 2560 × 1440", "Frecuencia": "360 Hz", "Respuesta": "0,03 ms GtG", "HDR": "True Black 400", "Conexiones": "2× HDMI 2.1, DP 2.1, USB-C 90 W" },
-      "colors": [ { "name": "Negro", "hex": "#1f2024" } ],
+      "features": [
+        "QD-OLED 27\" QHD",
+        "360 Hz y 0,03 ms",
+        "HDR True Black 400",
+        "Base ergonómica con giro y altura"
+      ],
+      "specs": {
+        "Panel": "27\" QD-OLED, 2560 × 1440",
+        "Frecuencia": "360 Hz",
+        "Respuesta": "0,03 ms GtG",
+        "HDR": "True Black 400",
+        "Conexiones": "2× HDMI 2.1, DP 2.1, USB-C 90 W"
+      },
+      "colors": [
+        {
+          "name": "Negro",
+          "hex": "#1f2024"
+        }
+      ],
       "options": [],
-      "art": { "kind": "monitor", "bg": ["#e1e8f5", "#c5d3ee"] }
+      "art": {
+        "kind": "monitor",
+        "bg": [
+          "#e1e8f5",
+          "#c5d3ee"
+        ]
+      },
+      "image": "/products/volt-arena-27.webp"
     },
     {
-      "id": 14, "slug": "aurion-watch-s", "name": "Aurion Watch S", "brand": "Aurion", "category": "wearables",
-      "price": 349, "compare_at_price": null, "stock": 27, "rating": 4.6, "reviews_count": 233,
-      "badge": null, "is_featured": true, "is_new": false,
+      "id": 14,
+      "slug": "aurion-watch-s",
+      "name": "Aurion Watch S",
+      "brand": "Aurion",
+      "category": "wearables",
+      "price": 349,
+      "compare_at_price": null,
+      "stock": 27,
+      "rating": 4.6,
+      "reviews_count": 233,
+      "badge": null,
+      "is_featured": true,
+      "is_new": false,
       "short": "Smartwatch con ECG, GPS de doble frecuencia y 7 días de batería.",
       "description": "Aurion Watch S mide tu ritmo cardiaco, oxígeno en sangre, sueño y estrés, y además hace ECG. Con GPS de doble frecuencia, tus rutas son exactas incluso entre rascacielos.",
-      "features": ["ECG y SpO2", "GPS de doble frecuencia", "7 días de batería", "Pantalla AMOLED siempre activa"],
-      "specs": { "Pantalla": "1,9\" AMOLED, 2.000 nits", "Sensores": "Frecuencia cardiaca, ECG, SpO2, temperatura", "GPS": "Doble frecuencia L1 + L5", "Batería": "Hasta 7 días", "Resistencia": "5 ATM", "Peso": "38 g" },
-      "colors": [ { "name": "Medianoche", "hex": "#262833" }, { "name": "Rosa cuarzo", "hex": "#e7bfb6" }, { "name": "Plata", "hex": "#cfd2d7" } ],
-      "options": ["41 mm", "45 mm"],
-      "art": { "kind": "watch", "bg": ["#f4e8e5", "#ecd2cb"] }
+      "features": [
+        "ECG y SpO2",
+        "GPS de doble frecuencia",
+        "7 días de batería",
+        "Pantalla AMOLED siempre activa"
+      ],
+      "specs": {
+        "Pantalla": "1,9\" AMOLED, 2.000 nits",
+        "Sensores": "Frecuencia cardiaca, ECG, SpO2, temperatura",
+        "GPS": "Doble frecuencia L1 + L5",
+        "Batería": "Hasta 7 días",
+        "Resistencia": "5 ATM",
+        "Peso": "38 g"
+      },
+      "colors": [
+        {
+          "name": "Medianoche",
+          "hex": "#262833"
+        },
+        {
+          "name": "Rosa cuarzo",
+          "hex": "#e7bfb6"
+        },
+        {
+          "name": "Plata",
+          "hex": "#cfd2d7"
+        }
+      ],
+      "options": [
+        "41 mm",
+        "45 mm"
+      ],
+      "art": {
+        "kind": "watch",
+        "bg": [
+          "#f4e8e5",
+          "#ecd2cb"
+        ]
+      },
+      "image": "/products/aurion-watch-s.webp"
     },
     {
-      "id": 15, "slug": "aurion-watch-ultra", "name": "Aurion Watch Ultra", "brand": "Aurion", "category": "wearables",
-      "price": 799, "compare_at_price": null, "stock": 7, "rating": 4.9, "reviews_count": 88,
-      "badge": "Edición limitada", "is_featured": false, "is_new": true,
+      "id": 15,
+      "slug": "aurion-watch-ultra",
+      "name": "Aurion Watch Ultra",
+      "brand": "Aurion",
+      "category": "wearables",
+      "price": 799,
+      "compare_at_price": null,
+      "stock": 7,
+      "rating": 4.9,
+      "reviews_count": 88,
+      "badge": "Edición limitada",
+      "is_featured": false,
+      "is_new": true,
       "short": "Titanio, zafiro y 14 días de batería para aventuras extremas.",
       "description": "Construido para la montaña, el mar y el desierto. Caja de titanio, cristal de zafiro, linterna integrada, buceo hasta 40 metros y mapas topográficos sin conexión.",
-      "features": ["Caja de titanio y cristal de zafiro", "14 días de batería", "Mapas topográficos offline", "Certificado para buceo a 40 m"],
-      "specs": { "Pantalla": "2,0\" AMOLED, 3.000 nits", "Material": "Titanio grado 5, zafiro", "Batería": "Hasta 14 días", "Resistencia": "10 ATM, EN13319", "Peso": "61 g" },
-      "colors": [ { "name": "Titanio natural", "hex": "#b9b3a8" }, { "name": "Titanio negro", "hex": "#2f3034" } ],
+      "features": [
+        "Caja de titanio y cristal de zafiro",
+        "14 días de batería",
+        "Mapas topográficos offline",
+        "Certificado para buceo a 40 m"
+      ],
+      "specs": {
+        "Pantalla": "2,0\" AMOLED, 3.000 nits",
+        "Material": "Titanio grado 5, zafiro",
+        "Batería": "Hasta 14 días",
+        "Resistencia": "10 ATM, EN13319",
+        "Peso": "61 g"
+      },
+      "colors": [
+        {
+          "name": "Titanio natural",
+          "hex": "#b9b3a8"
+        },
+        {
+          "name": "Titanio negro",
+          "hex": "#2f3034"
+        }
+      ],
       "options": [],
-      "art": { "kind": "watch", "bg": ["#ece9e2", "#d9d2c4"] }
+      "art": {
+        "kind": "watch",
+        "bg": [
+          "#ece9e2",
+          "#d9d2c4"
+        ]
+      },
+      "image": "/products/aurion-watch-ultra.webp"
     },
     {
-      "id": 16, "slug": "pulse-band-3", "name": "Pulse Band 3", "brand": "Pulse", "category": "wearables",
-      "price": 79, "compare_at_price": 99, "stock": 95, "rating": 4.3, "reviews_count": 617,
-      "badge": "-20%", "is_featured": false, "is_new": false,
+      "id": 16,
+      "slug": "pulse-band-3",
+      "name": "Pulse Band 3",
+      "brand": "Pulse",
+      "category": "wearables",
+      "price": 79,
+      "compare_at_price": 99,
+      "stock": 95,
+      "rating": 4.3,
+      "reviews_count": 617,
+      "badge": "-20%",
+      "is_featured": false,
+      "is_new": false,
       "short": "Pulsera de actividad con 120 deportes y 21 días de batería.",
       "description": "Ligera hasta olvidarte de que la llevas. Pulse Band 3 registra pasos, sueño, frecuencia cardiaca y 120 deportes, y solo la cargas una vez cada tres semanas.",
-      "features": ["21 días de batería", "120 modos deportivos", "Seguimiento del sueño avanzado", "Sumergible 5 ATM"],
-      "specs": { "Pantalla": "1,6\" AMOLED", "Batería": "Hasta 21 días", "Resistencia": "5 ATM", "Sensores": "Frecuencia cardiaca, SpO2", "Peso": "24 g" },
-      "colors": [ { "name": "Negro", "hex": "#25262b" }, { "name": "Lavanda", "hex": "#b9b0e0" }, { "name": "Lima", "hex": "#c8e66b" } ],
+      "features": [
+        "21 días de batería",
+        "120 modos deportivos",
+        "Seguimiento del sueño avanzado",
+        "Sumergible 5 ATM"
+      ],
+      "specs": {
+        "Pantalla": "1,6\" AMOLED",
+        "Batería": "Hasta 21 días",
+        "Resistencia": "5 ATM",
+        "Sensores": "Frecuencia cardiaca, SpO2",
+        "Peso": "24 g"
+      },
+      "colors": [
+        {
+          "name": "Negro",
+          "hex": "#25262b"
+        },
+        {
+          "name": "Lavanda",
+          "hex": "#b9b0e0"
+        },
+        {
+          "name": "Lima",
+          "hex": "#c8e66b"
+        }
+      ],
       "options": [],
-      "art": { "kind": "band", "bg": ["#ecebf7", "#d8d4f0"] }
+      "art": {
+        "kind": "band",
+        "bg": [
+          "#ecebf7",
+          "#d8d4f0"
+        ]
+      },
+      "image": "/products/pulse-band-3.webp"
     },
     {
-      "id": 17, "slug": "kairo-keys-75", "name": "Kairo Keys 75", "brand": "Kairo", "category": "accessories",
-      "price": 169, "compare_at_price": null, "stock": 41, "rating": 4.8, "reviews_count": 274,
-      "badge": "Favorito", "is_featured": true, "is_new": false,
+      "id": 17,
+      "slug": "kairo-keys-75",
+      "name": "Kairo Keys 75",
+      "brand": "Kairo",
+      "category": "accessories",
+      "price": 169,
+      "compare_at_price": null,
+      "stock": 41,
+      "rating": 4.8,
+      "reviews_count": 274,
+      "badge": "Favorito",
+      "is_featured": true,
+      "is_new": false,
       "short": "Teclado mecánico 75% de aluminio con switches lubricados y hot-swap.",
       "description": "Un teclado que da gusto escuchar. Carcasa de aluminio, montaje gasket, switches lineales prelubricados y teclas PBT de doble inyección. Inalámbrico triple modo.",
-      "features": ["Carcasa de aluminio CNC", "Montaje gasket", "Switches hot-swap prelubricados", "Inalámbrico: 2,4 GHz, Bluetooth y cable"],
-      "specs": { "Formato": "75% (84 teclas)", "Switches": "Lineales Kairo Silk, hot-swap", "Teclas": "PBT doble inyección", "Conectividad": "2,4 GHz, Bluetooth 5.1, USB-C", "Batería": "4.000 mAh", "Peso": "1,6 kg" },
-      "colors": [ { "name": "Gris piedra", "hex": "#9a9ca3" }, { "name": "Crema", "hex": "#ece3d2" } ],
-      "options": ["Lineal", "Táctil"],
-      "art": { "kind": "keyboard", "bg": ["#efece6", "#ddd6ca"] }
+      "features": [
+        "Carcasa de aluminio CNC",
+        "Montaje gasket",
+        "Switches hot-swap prelubricados",
+        "Inalámbrico: 2,4 GHz, Bluetooth y cable"
+      ],
+      "specs": {
+        "Formato": "75% (84 teclas)",
+        "Switches": "Lineales Kairo Silk, hot-swap",
+        "Teclas": "PBT doble inyección",
+        "Conectividad": "2,4 GHz, Bluetooth 5.1, USB-C",
+        "Batería": "4.000 mAh",
+        "Peso": "1,6 kg"
+      },
+      "colors": [
+        {
+          "name": "Gris piedra",
+          "hex": "#9a9ca3"
+        },
+        {
+          "name": "Crema",
+          "hex": "#ece3d2"
+        }
+      ],
+      "options": [
+        "Lineal",
+        "Táctil"
+      ],
+      "art": {
+        "kind": "keyboard",
+        "bg": [
+          "#efece6",
+          "#ddd6ca"
+        ]
+      },
+      "image": "/products/kairo-keys-75.webp"
     },
     {
-      "id": 18, "slug": "kairo-glide-mouse", "name": "Kairo Glide", "brand": "Kairo", "category": "accessories",
-      "price": 109, "compare_at_price": 129, "stock": 53, "rating": 4.7, "reviews_count": 341,
-      "badge": "-15%", "is_featured": false, "is_new": false,
+      "id": 18,
+      "slug": "kairo-glide-mouse",
+      "name": "Kairo Glide",
+      "brand": "Kairo",
+      "category": "accessories",
+      "price": 109,
+      "compare_at_price": 129,
+      "stock": 53,
+      "rating": 4.7,
+      "reviews_count": 341,
+      "badge": "-15%",
+      "is_featured": false,
+      "is_new": false,
       "short": "Ratón ergonómico con rueda magnética y sensor de 8K DPI.",
       "description": "Diseñado para jornadas largas. Su forma esculpida apoya toda la mano, la rueda magnética recorre 1.000 líneas por segundo y funciona sobre cristal.",
-      "features": ["Sensor 8K DPI que funciona en cristal", "Rueda magnética ultrarrápida", "Clics silenciosos", "Conecta hasta 3 dispositivos"],
-      "specs": { "Sensor": "8.000 DPI", "Batería": "70 días, carga USB-C", "Conectividad": "Bluetooth, receptor USB", "Botones": "7 programables", "Peso": "141 g" },
-      "colors": [ { "name": "Grafito", "hex": "#3a3c42" }, { "name": "Gris claro", "hex": "#d5d7db" } ],
+      "features": [
+        "Sensor 8K DPI que funciona en cristal",
+        "Rueda magnética ultrarrápida",
+        "Clics silenciosos",
+        "Conecta hasta 3 dispositivos"
+      ],
+      "specs": {
+        "Sensor": "8.000 DPI",
+        "Batería": "70 días, carga USB-C",
+        "Conectividad": "Bluetooth, receptor USB",
+        "Botones": "7 programables",
+        "Peso": "141 g"
+      },
+      "colors": [
+        {
+          "name": "Grafito",
+          "hex": "#3a3c42"
+        },
+        {
+          "name": "Gris claro",
+          "hex": "#d5d7db"
+        }
+      ],
       "options": [],
-      "art": { "kind": "mouse", "bg": ["#e8ebef", "#d2d8e0"] }
+      "art": {
+        "kind": "mouse",
+        "bg": [
+          "#e8ebef",
+          "#d2d8e0"
+        ]
+      },
+      "image": "/products/kairo-glide-mouse.webp"
     },
     {
-      "id": 19, "slug": "volt-charge-100", "name": "Volt Charge 100", "brand": "Volt", "category": "accessories",
-      "price": 69, "compare_at_price": null, "stock": 120, "rating": 4.6, "reviews_count": 508,
-      "badge": null, "is_featured": false, "is_new": true,
+      "id": 19,
+      "slug": "volt-charge-100",
+      "name": "Volt Charge 100",
+      "brand": "Volt",
+      "category": "accessories",
+      "price": 69,
+      "compare_at_price": null,
+      "stock": 120,
+      "rating": 4.6,
+      "reviews_count": 508,
+      "badge": null,
+      "is_featured": false,
+      "is_new": true,
       "short": "Cargador GaN de 100 W con 3 puertos: portátil, móvil y reloj a la vez.",
       "description": "Sustituye tres cargadores por uno del tamaño de una galleta. Tecnología GaN de tercera generación para cargar tu portátil a máxima velocidad sin calentarse.",
-      "features": ["100 W con tecnología GaN III", "2× USB-C + 1× USB-A", "Reparto inteligente de potencia", "Clavija plegable"],
-      "specs": { "Potencia máxima": "100 W", "Puertos": "2× USB-C PD 3.1, 1× USB-A", "Dimensiones": "52 × 52 × 30 mm", "Peso": "165 g" },
-      "colors": [ { "name": "Blanco", "hex": "#f1f1ef" }, { "name": "Negro", "hex": "#26272b" } ],
+      "features": [
+        "100 W con tecnología GaN III",
+        "2× USB-C + 1× USB-A",
+        "Reparto inteligente de potencia",
+        "Clavija plegable"
+      ],
+      "specs": {
+        "Potencia máxima": "100 W",
+        "Puertos": "2× USB-C PD 3.1, 1× USB-A",
+        "Dimensiones": "52 × 52 × 30 mm",
+        "Peso": "165 g"
+      },
+      "colors": [
+        {
+          "name": "Blanco",
+          "hex": "#f1f1ef"
+        },
+        {
+          "name": "Negro",
+          "hex": "#26272b"
+        }
+      ],
       "options": [],
-      "art": { "kind": "charger", "bg": ["#eef1f4", "#dce2e9"] }
+      "art": {
+        "kind": "charger",
+        "bg": [
+          "#eef1f4",
+          "#dce2e9"
+        ]
+      },
+      "image": "/products/volt-charge-100.webp"
     },
     {
-      "id": 20, "slug": "orbit-cam-4k", "name": "Orbit Cam 4K", "brand": "Orbit", "category": "accessories",
-      "price": 159, "compare_at_price": 189, "stock": 22, "rating": 4.5, "reviews_count": 132,
-      "badge": "-16%", "is_featured": false, "is_new": false,
+      "id": 20,
+      "slug": "orbit-cam-4k",
+      "name": "Orbit Cam 4K",
+      "brand": "Orbit",
+      "category": "accessories",
+      "price": 159,
+      "compare_at_price": 189,
+      "stock": 22,
+      "rating": 4.5,
+      "reviews_count": 132,
+      "badge": "-16%",
+      "is_featured": false,
+      "is_new": false,
       "short": "Webcam 4K con encuadre automático por IA y luz de anillo integrada.",
       "description": "Destaca en cada videollamada. Orbit Cam 4K te sigue cuando te mueves, corrige la luz automáticamente y cancela el ruido de fondo con sus micrófonos duales.",
-      "features": ["Vídeo 4K a 30 fps / 1080p a 60 fps", "Encuadre automático con IA", "Luz de anillo regulable", "Tapa de privacidad magnética"],
-      "specs": { "Resolución": "4K 30 fps, 1080p 60 fps", "Campo de visión": "65° / 78° / 90°", "Micrófonos": "2, con reducción de ruido", "Conexión": "USB-C" },
-      "colors": [ { "name": "Negro", "hex": "#26272b" } ],
+      "features": [
+        "Vídeo 4K a 30 fps / 1080p a 60 fps",
+        "Encuadre automático con IA",
+        "Luz de anillo regulable",
+        "Tapa de privacidad magnética"
+      ],
+      "specs": {
+        "Resolución": "4K 30 fps, 1080p 60 fps",
+        "Campo de visión": "65° / 78° / 90°",
+        "Micrófonos": "2, con reducción de ruido",
+        "Conexión": "USB-C"
+      },
+      "colors": [
+        {
+          "name": "Negro",
+          "hex": "#26272b"
+        }
+      ],
       "options": [],
-      "art": { "kind": "camera", "bg": ["#e6eef2", "#cddde6"] }
+      "art": {
+        "kind": "camera",
+        "bg": [
+          "#e6eef2",
+          "#cddde6"
+        ]
+      },
+      "image": "/products/orbit-cam-4k.webp"
     },
     {
-      "id": 21, "slug": "nova-tab-11", "name": "Nova Tab 11", "brand": "Nova", "category": "smartphones",
-      "price": 599, "compare_at_price": 679, "stock": 19, "rating": 4.6, "reviews_count": 176,
-      "badge": "-12%", "is_featured": false, "is_new": false,
+      "id": 21,
+      "slug": "nova-tab-11",
+      "name": "Nova Tab 11",
+      "brand": "Nova",
+      "category": "smartphones",
+      "price": 599,
+      "compare_at_price": 679,
+      "stock": 19,
+      "rating": 4.6,
+      "reviews_count": 176,
+      "badge": "-12%",
+      "is_featured": false,
+      "is_new": false,
       "short": "Tablet de 11\" con pantalla de 144 Hz, lápiz incluido y altavoces cuádruples.",
       "description": "Toma apuntes, dibuja o maratonea series. La Nova Tab 11 incluye el Nova Pen con 4.096 niveles de presión y suena genial gracias a sus cuatro altavoces.",
-      "features": ["Pantalla 2,5K de 144 Hz", "Nova Pen incluido", "4 altavoces con Dolby Atmos", "Hasta 14 h de vídeo"],
-      "specs": { "Pantalla": "11\" LCD 2,5K, 144 Hz", "Procesador": "Nova Q2", "Memoria": "8 GB RAM", "Almacenamiento": "128 GB / 256 GB", "Batería": "8.800 mAh, 45 W", "Peso": "480 g" },
-      "colors": [ { "name": "Gris", "hex": "#7d8088" }, { "name": "Azul cielo", "hex": "#a8c3dd" } ],
-      "options": ["128 GB", "256 GB"],
-      "art": { "kind": "tablet", "bg": ["#e5eef6", "#cadced"] }
+      "features": [
+        "Pantalla 2,5K de 144 Hz",
+        "Nova Pen incluido",
+        "4 altavoces con Dolby Atmos",
+        "Hasta 14 h de vídeo"
+      ],
+      "specs": {
+        "Pantalla": "11\" LCD 2,5K, 144 Hz",
+        "Procesador": "Nova Q2",
+        "Memoria": "8 GB RAM",
+        "Almacenamiento": "128 GB / 256 GB",
+        "Batería": "8.800 mAh, 45 W",
+        "Peso": "480 g"
+      },
+      "colors": [
+        {
+          "name": "Gris",
+          "hex": "#7d8088"
+        },
+        {
+          "name": "Azul cielo",
+          "hex": "#a8c3dd"
+        }
+      ],
+      "options": [
+        "128 GB",
+        "256 GB"
+      ],
+      "art": {
+        "kind": "tablet",
+        "bg": [
+          "#e5eef6",
+          "#cadced"
+        ]
+      },
+      "image": "/products/nova-tab-11.webp"
     },
     {
-      "id": 22, "slug": "lumen-air-open", "name": "Lumen Air Open", "brand": "Lumen", "category": "audio",
-      "price": 149, "compare_at_price": null, "stock": 38, "rating": 4.4, "reviews_count": 95,
-      "badge": null, "is_featured": false, "is_new": true,
+      "id": 22,
+      "slug": "lumen-air-open",
+      "name": "Lumen Air Open",
+      "brand": "Lumen",
+      "category": "audio",
+      "price": 149,
+      "compare_at_price": null,
+      "stock": 38,
+      "rating": 4.4,
+      "reviews_count": 95,
+      "badge": null,
+      "is_featured": false,
+      "is_new": true,
       "short": "Auriculares deportivos de oído abierto: música sin aislarte del mundo.",
       "description": "Escucha tu música y también el tráfico, a tu compañero de carrera o los anuncios del aeropuerto. Diseño de oído abierto que no presiona y se queda en su sitio.",
-      "features": ["Diseño de oído abierto", "IP55", "10 h de autonomía", "Gancho flexible ultraligero"],
-      "specs": { "Drivers": "16,2 mm", "Autonomía": "10 h + 30 h con estuche", "Resistencia": "IP55", "Peso": "9 g por auricular" },
-      "colors": [ { "name": "Lima", "hex": "#c8e66b" }, { "name": "Negro", "hex": "#26272b" } ],
+      "features": [
+        "Diseño de oído abierto",
+        "IP55",
+        "10 h de autonomía",
+        "Gancho flexible ultraligero"
+      ],
+      "specs": {
+        "Drivers": "16,2 mm",
+        "Autonomía": "10 h + 30 h con estuche",
+        "Resistencia": "IP55",
+        "Peso": "9 g por auricular"
+      },
+      "colors": [
+        {
+          "name": "Lima",
+          "hex": "#c8e66b"
+        },
+        {
+          "name": "Negro",
+          "hex": "#26272b"
+        }
+      ],
       "options": [],
-      "art": { "kind": "earbuds", "bg": ["#f0f5e1", "#e0ecbc"] }
+      "art": {
+        "kind": "earbuds",
+        "bg": [
+          "#f0f5e1",
+          "#e0ecbc"
+        ]
+      },
+      "image": "/products/lumen-air-open.webp"
     },
     {
-      "id": 23, "slug": "orbit-vision-xr", "name": "Orbit Vision XR", "brand": "Orbit", "category": "gaming",
-      "price": 899, "compare_at_price": null, "stock": 5, "rating": 4.6, "reviews_count": 58,
-      "badge": "Nuevo", "is_featured": true, "is_new": true,
+      "id": 23,
+      "slug": "orbit-vision-xr",
+      "name": "Orbit Vision XR",
+      "brand": "Orbit",
+      "category": "gaming",
+      "price": 899,
+      "compare_at_price": null,
+      "stock": 5,
+      "rating": 4.6,
+      "reviews_count": 58,
+      "badge": "Nuevo",
+      "is_featured": true,
+      "is_new": true,
       "short": "Gafas de realidad mixta con pantallas micro-OLED 4K por ojo.",
       "description": "Mezcla lo digital con tu salón. Orbit Vision XR combina passthrough a color de alta resolución con pantallas micro-OLED 4K para juegos, cine y trabajo en realidad mixta.",
-      "features": ["Micro-OLED 4K por ojo", "Passthrough a color HD", "Seguimiento de manos y ojos", "Audio espacial integrado"],
-      "specs": { "Pantallas": "2× micro-OLED 3.840 × 3.552", "Frecuencia": "90 / 120 Hz", "Seguimiento": "6DoF, manos y ojos", "Autonomía": "2,5 h", "Peso": "515 g" },
-      "colors": [ { "name": "Blanco", "hex": "#ecedf0" } ],
-      "options": ["256 GB", "512 GB"],
-      "art": { "kind": "headset", "bg": ["#ebe6f6", "#d6cdee"] }
+      "features": [
+        "Micro-OLED 4K por ojo",
+        "Passthrough a color HD",
+        "Seguimiento de manos y ojos",
+        "Audio espacial integrado"
+      ],
+      "specs": {
+        "Pantallas": "2× micro-OLED 3.840 × 3.552",
+        "Frecuencia": "90 / 120 Hz",
+        "Seguimiento": "6DoF, manos y ojos",
+        "Autonomía": "2,5 h",
+        "Peso": "515 g"
+      },
+      "colors": [
+        {
+          "name": "Blanco",
+          "hex": "#ecedf0"
+        }
+      ],
+      "options": [
+        "256 GB",
+        "512 GB"
+      ],
+      "art": {
+        "kind": "headset",
+        "bg": [
+          "#ebe6f6",
+          "#d6cdee"
+        ]
+      },
+      "image": "/products/orbit-vision-xr.webp"
     },
     {
-      "id": 24, "slug": "volt-dock-pro", "name": "Volt Dock Pro", "brand": "Volt", "category": "accessories",
-      "price": 229, "compare_at_price": 259, "stock": 17, "rating": 4.5, "reviews_count": 84,
-      "badge": "-12%", "is_featured": false, "is_new": false,
+      "id": 24,
+      "slug": "volt-dock-pro",
+      "name": "Volt Dock Pro",
+      "brand": "Volt",
+      "category": "accessories",
+      "price": 229,
+      "compare_at_price": 259,
+      "stock": 17,
+      "rating": 4.5,
+      "reviews_count": 84,
+      "badge": "-12%",
+      "is_featured": false,
+      "is_new": false,
       "short": "Base Thunderbolt con 12 puertos y soporte para dos monitores 4K.",
       "description": "Un solo cable para conectar tu portátil a todo tu escritorio: dos monitores 4K, red de 2,5 Gb, lector de tarjetas y carga de 96 W.",
-      "features": ["12 puertos", "Dos monitores 4K a 60 Hz", "Ethernet de 2,5 Gb", "Carga del portátil a 96 W"],
-      "specs": { "Puertos": "3× USB-C, 4× USB-A, 2× HDMI, RJ45, SD, jack", "Ancho de banda": "40 Gbps", "Carga": "96 W", "Dimensiones": "18 × 8 × 2,5 cm" },
-      "colors": [ { "name": "Gris espacial", "hex": "#5b5e66" } ],
+      "features": [
+        "12 puertos",
+        "Dos monitores 4K a 60 Hz",
+        "Ethernet de 2,5 Gb",
+        "Carga del portátil a 96 W"
+      ],
+      "specs": {
+        "Puertos": "3× USB-C, 4× USB-A, 2× HDMI, RJ45, SD, jack",
+        "Ancho de banda": "40 Gbps",
+        "Carga": "96 W",
+        "Dimensiones": "18 × 8 × 2,5 cm"
+      },
+      "colors": [
+        {
+          "name": "Gris espacial",
+          "hex": "#5b5e66"
+        }
+      ],
       "options": [],
-      "art": { "kind": "dock", "bg": ["#eaecef", "#d5d9df"] }
+      "art": {
+        "kind": "dock",
+        "bg": [
+          "#eaecef",
+          "#d5d9df"
+        ]
+      },
+      "image": "/products/volt-dock-pro.webp"
     }
   ]
 }

@@ -12,6 +12,8 @@ export function StoreProvider({ children }) {
     useEffect(() => save("td_cart", store.cart), [store.cart]);
     useEffect(() => save("td_wishlist", store.wishlist), [store.wishlist]);
     useEffect(() => save("td_user", store.user), [store.user]);
+    useEffect(() => save("td_compare", store.compare), [store.compare]);
+    useEffect(() => save("td_recent", store.recent), [store.recent]);
 
     useEffect(() => {
         let cancelled = false;

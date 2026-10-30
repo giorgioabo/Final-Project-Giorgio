@@ -4,6 +4,8 @@ import ScrollToTop from "../components/ScrollToTop";
 import Navbar from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import CartDrawer from "../components/CartDrawer";
+import QuickView from "../components/QuickView";
+import CompareBar from "../components/CompareBar";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 
 function Toasts() {
@@ -28,6 +30,8 @@ export const Layout = () => (
         </main>
         <Footer />
         <CartDrawer />
+        <QuickView />
+        <CompareBar />
         <Toasts />
     </ScrollToTop>
 );

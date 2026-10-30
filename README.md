@@ -9,7 +9,13 @@
 ## ✨ Qué incluye
 
 ### Tienda
-- **Portada** con hero, categorías, destacados, oferta semanal con cuenta atrás, novedades, opiniones y newsletter.
+- **Portada interactiva**:
+  - Escaparate giratorio que se inclina con el ratón y contadores animados.
+  - Carrusel por categorías y asistente de compra (3 preguntas que recomiendan productos).
+  - Escritorio "compra el setup" con puntos sobre cada producto.
+  - Oferta semanal con cuenta atrás, opiniones, vistos recientemente y newsletter.
+- **Vista rápida** y **comparador** de hasta 3 productos, con el mejor precio y la mejor valoración destacados.
+- Ficha con **zoom al pasar el ratón**, barra de compra fija, pack "Cómpralo junto" y preguntas frecuentes.
 - **Catálogo** con búsqueda, filtros combinables (categoría, marca, precio, valoración, stock, novedades), 6 ordenaciones y filtros guardados en la URL.
 - **Buscador instantáneo** en la barra de navegación, con navegación por teclado.
 - **Ficha de producto** con galería por color, versiones, stock en tiempo real, fecha estimada de entrega, especificaciones y reseñas (los usuarios pueden publicar las suyas).
@@ -33,7 +39,7 @@
 
 ## 🧱 Arquitectura: siempre online
 
-El catálogo (24 productos de marcas ficticias) vive en [`src/catalog/catalog.json`](src/catalog/catalog.json), y sus ilustraciones son SVG generados en código ([`ProductArt.jsx`](src/front/components/ProductArt.jsx)). **No depende de imágenes ni de bases de datos externas que puedan caducar.**
+El catálogo (24 productos de marcas ficticias) vive en [`src/catalog/catalog.json`](src/catalog/catalog.json). Las fotos de estudio están en [`public/products/`](public/products), generadas con IA, sin logotipos y optimizadas en WebP (unos 30 KB cada una). Si alguna falta, se dibuja una ilustración SVG de respaldo ([`ProductArt.jsx`](src/front/components/ProductArt.jsx)). **No depende de imágenes ni de bases de datos externas que puedan caducar.**
 
 El frontend tiene dos modos ([`src/front/lib/api.js`](src/front/lib/api.js)):
 

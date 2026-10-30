@@ -71,7 +71,7 @@ class Product(db.Model):
     order_items: Mapped[list["OrderItem"]] = relationship(
         back_populates="product")
 
-    DETAIL_FIELDS = ("short", "features", "specs", "colors", "options", "art")
+    DETAIL_FIELDS = ("short", "features", "specs", "colors", "options", "art", "image")
 
     def serialize(self):
         details = self.details or {}

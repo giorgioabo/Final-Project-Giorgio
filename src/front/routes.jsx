@@ -14,6 +14,7 @@ const Register = lazy(() => import("./pages/Register"));
 const Account = lazy(() => import("./pages/Account"));
 const Admin = lazy(() => import("./pages/Admin"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Compare = lazy(() => import("./pages/Compare"));
 
 const page = el => <Suspense fallback={<div style={{ minHeight: "70vh" }} />}>{el}</Suspense>;
 
@@ -32,6 +33,7 @@ export const router = createBrowserRouter([
             { path: "register", element: page(<Register />) },
             { path: "account", element: page(<Account />) },
             { path: "admin", element: page(<Admin />) },
+            { path: "compare", element: page(<Compare />) },
             { path: "*", element: page(<NotFound />) },
         ],
     },

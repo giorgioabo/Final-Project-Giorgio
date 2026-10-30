@@ -7,6 +7,15 @@ import ProductCard from "../components/ProductCard";
 import { Reveal, Stars, usePageTitle, Avatar } from "../components/ui";
 import { CATEGORIES, discountPercent } from "../lib/catalog";
 import { money } from "../lib/pricing";
+import { CountUp, HeroShowcase, CategoryTabs, DeviceQuiz, ShopTheSetup, RecentlyViewed } from "../components/Interactive";
+
+// Posición (en %) de cada producto dentro de la foto del escritorio.
+const SETUP_SPOTS = [
+    { id: "laptop", slug: "kairo-book-14", x: 49, y: 37 },
+    { id: "headphones", slug: "lumen-h9", x: 67, y: 64 },
+    { id: "keyboard", slug: "kairo-keys-75", x: 23, y: 71 },
+    { id: "mouse", slug: "kairo-glide-mouse", x: 50, y: 81 },
+];
 
 function useCountdown() {
     // Oferta que se renueva cada domingo a medianoche.
@@ -48,9 +57,8 @@ export default function Home() {
     const featured = products.filter(p => p.is_featured).slice(0, 8);
     const newest = products.filter(p => p.is_new).slice(0, 4);
     const deal = [...products].filter(p => p.stock > 0).sort((a, b) => discountPercent(b) - discountPercent(a))[0];
-    const heroA = products.find(p => p.slug === "kairo-book-14") || products[0];
-    const heroB = products.find(p => p.slug === "lumen-h9") || products[1];
-    const heroC = products.find(p => p.slug === "aurion-watch-s") || products[2];
+    const heroProducts = ["lumen-h9", "kairo-book-14", "nova-x1-pro", "orbit-go"]
+        .map(slug => products.find(p => p.slug === slug)).filter(Boolean);
     const count = slug => products.filter(p => p.category === slug).length;
 
     const subscribe = e => {
@@ -80,20 +88,18 @@ export default function Home() {
                             <Link to="/catalog?sort=discount" className="btn btn-outline btn-lg">Ver ofertas</Link>
                         </div>
                         <div className="hero-stats">
-                            <div><strong>50k+</strong><span>clientes felices</span></div>
-                            <div><strong>4,8/5</strong><span>valoración media</span></div>
-                            <div><strong>24 h</strong><span>entrega express</span></div>
+                            <div><strong><CountUp to={50} suffix="k+" /></strong><span>clientes felices</span></div>
+                            <div><strong><CountUp to={4.8} decimals={1} suffix="/5" /></strong><span>valoración media</span></div>
+                            <div><strong><CountUp to={24} suffix=" h" /></strong><span>entrega express</span></div>
                         </div>
                     </div>
-                    <div className="hero-visual">
-                        <Link to={`/product/${heroA.id}/${heroA.slug}`} className="hero-tile t1"><ProductArt product={heroA} /></Link>
-                        <Link to={`/product/${heroB.id}/${heroB.slug}`} className="hero-tile t2"><ProductArt product={heroB} /></Link>
-                        <Link to={`/product/${heroC.id}/${heroC.slug}`} className="hero-tile t3"><ProductArt product={heroC} color={heroC.colors[1]?.hex} /></Link>
-                        <div className="hero-floating">
+                    <div style={{ position: "relative" }}>
+                        <HeroShowcase products={heroProducts} />
+                        <div className="hero-floating" style={{ top: "12%", bottom: "auto", left: -24 }}>
                             <span className="dot"><BadgeCheck size={20} /></span>
                             <div>
-                                <strong className="small" style={{ display: "block" }}>{heroA.name}</strong>
-                                <span className="tiny muted">desde {money(heroA.price)}</span>
+                                <strong className="small" style={{ display: "block" }}>Envío gratis</strong>
+                                <span className="tiny muted">en pedidos desde 99 €</span>
                             </div>
                         </div>
                     </div>
@@ -213,6 +219,37 @@ export default function Home() {
                 </section>
             )}
 
+            {/* SHOP BY CATEGORY */}
+            <section className="section" style={{ paddingTop: 0 }}>
+                <div className="container">
+                    <Reveal className="section-head" style={{ marginBottom: 24 }}>
+                        <div>
+                            <span className="eyebrow">Explora</span>
+                            <h2 className="display-2" style={{ marginTop: 12 }}>Compra por categoría</h2>
+                        </div>
+                    </Reveal>
+                    <CategoryTabs />
+                </div>
+            </section>
+
+            {/* QUIZ */}
+            <section className="section" style={{ paddingTop: 0 }}>
+                <div className="container"><Reveal><DeviceQuiz /></Reveal></div>
+            </section>
+
+            {/* SETUP */}
+            <section className="section" style={{ paddingTop: 0 }}>
+                <div className="container">
+                    <Reveal className="section-head" style={{ marginBottom: 24 }}>
+                        <div>
+                            <span className="eyebrow">Inspiración</span>
+                            <h2 className="display-2" style={{ marginTop: 12 }}>El setup perfecto</h2>
+                        </div>
+                    </Reveal>
+                    <ShopTheSetup image="/setup-desk.webp" spots={SETUP_SPOTS} />
+                </div>
+            </section>
+
             {/* PERKS */}
             <section className="section" style={{ paddingTop: 0 }}>
                 <div className="container perks">
@@ -253,6 +290,8 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
+            <div className="container"><RecentlyViewed /></div>
 
             {/* NEWSLETTER */}
             <section className="container">

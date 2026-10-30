@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useId, useState } from "react";
 
 // Ilustraciones vectoriales propias de cada producto. Se dibujan en el navegador,
 // así que nunca dependen de imágenes externas que puedan caducar o desaparecer.
@@ -305,7 +305,41 @@ const SHAPES = {
     ),
 };
 
-export default function ProductArt({ product, color, className = "", rounded = true, bare = false }) {
+// Encuadres de la galería: vista completa y detalles ampliados de la misma foto.
+const PHOTO_VIEWS = [
+    { scale: 1, origin: "50% 50%" },
+    { scale: 1.7, origin: "30% 35%" },
+    { scale: 1.9, origin: "70% 60%" },
+    { scale: 1.45, origin: "50% 80%" },
+];
+
+// Foto de estudio del producto (incluida en /public/products). Si falta o no carga,
+// se usa la ilustración vectorial como respaldo.
+export default function ProductArt({ product, view = 0, eager = false, ...rest }) {
+    const [failed, setFailed] = useState(false);
+    if (!product?.image || failed) return <ProductIllustration product={product} {...rest} />;
+    const v = PHOTO_VIEWS[view % PHOTO_VIEWS.length];
+    return (
+        <img
+            className={rest.className}
+            src={product.image}
+            alt={product.name}
+            loading={eager ? "eager" : "lazy"}
+            decoding="async"
+            draggable={false}
+            onError={() => setFailed(true)}
+            style={{
+                display: "block", width: "100%", height: "100%", objectFit: "cover",
+                borderRadius: rest.rounded === false ? 0 : "inherit",
+                transform: v.scale !== 1 ? `scale(${v.scale})` : undefined,
+                transformOrigin: v.origin,
+                background: "#efede8",
+            }}
+        />
+    );
+}
+
+export function ProductIllustration({ product, color, className = "", rounded = true, bare = false }) {
     const rawId = useId();
     const id = rawId.replace(/:/g, "");
     const art = product?.art || { kind: "phone", bg: ["#eee", "#ddd"] };
