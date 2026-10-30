@@ -10,6 +10,7 @@ export default function AuthShell({ children }) {
         <div className="auth">
             <div className="auth-side">
                 <div className="on-dark"><Logo /></div>
+                {hero && <div className="auth-art"><ProductArt product={hero} bare /></div>}
                 <div style={{ position: "relative", zIndex: 1, maxWidth: 420 }}>
                     <Stars value={5} showNumber={false} size={18} />
                     <p style={{ fontFamily: "var(--display)", fontSize: 30, lineHeight: 1.2, marginTop: 16, letterSpacing: "-0.02em" }}>
@@ -17,7 +18,6 @@ export default function AuthShell({ children }) {
                     </p>
                     <p style={{ opacity: .6, marginTop: 16 }}>— Marta G., cliente desde 2024</p>
                 </div>
-                {hero && <div className="art-stack" style={{ position: "absolute" }}><ProductArt product={hero} bare /></div>}
             </div>
             <div className="auth-form">{children}</div>
         </div>
